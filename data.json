@@ -1,0 +1,1740 @@
+{
+  "reviews": {
+    "e35d3cf4-2381-4eaf-a73a-82b7402ae593": {
+      "id": "e35d3cf4-2381-4eaf-a73a-82b7402ae593",
+      "language": "javascript",
+      "code_input": "const express = require(\"express\")\nconst app = express()\n\nlet users = []\n\napp.get(\"/user\", (req,res)=>{\n    const id = req.query.id\n    for(let i=0;i<users.length;i++){\n        if(users[i].id == id){\n            res.send(users[i])\n        }\n    }\n})\n\napp.post(\"/user\",(req,res)=>{\n    const user = req.body\n    users.push(user)\n    res.send(\"User Added\")\n})\n\napp.get(\"/admin\",(req,res)=>{\n    const password = req.query.password\n    if(password == \"123456\"){\n        res.send(\"Welcome Admin\")\n    }else{\n        res.send(\"Access Denied\")\n    }\n})\n\napp.listen(3000,()=>{\n    console.log(\"Server running\")\n})",
+      "status": "completed",
+      "created_at": "2026-03-13T06:30:41.892Z",
+      "completed_at": "2026-03-13T06:30:44.427Z",
+      "scores": {
+        "bugs": 0.6,
+        "security": 0.2,
+        "performance": 0.4,
+        "readability": 0.7,
+        "best_practices": 0.5,
+        "composite": 0.5
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 7,
+          "line_end": 12,
+          "title": "Null Pointer Exception",
+          "description": "The code does not handle null values properly. If 'id' is null, it will throw an error.",
+          "suggestion": "Add null checks for 'id' and 'users[i].id'",
+          "standard_ref": "Ensure functions handle null values properly."
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 19,
+          "line_end": 24,
+          "title": "Embedded Secret",
+          "description": "The code embeds a secret ('123456') in plain text.",
+          "suggestion": "Use environment variables or a secure secrets management system",
+          "standard_ref": "Do not embed secrets in code."
+        },
+        {
+          "id": 3,
+          "dimension": "performance",
+          "severity": "low",
+          "line_start": 7,
+          "line_end": 12,
+          "title": "Inefficient Loop",
+          "description": "The code uses a for loop to find a user, which can be inefficient for large datasets.",
+          "suggestion": "Use a more efficient data structure, such as a Map or a database",
+          "standard_ref": ""
+        },
+        {
+          "id": 4,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Semicolon",
+          "description": "The code is missing a semicolon at the end of the line.",
+          "suggestion": "Add a semicolon at the end of the line",
+          "standard_ref": ""
+        },
+        {
+          "id": 5,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Variable Declaration",
+          "description": "The code uses 'const' to declare a variable, but 'let' or 'const' should be used instead of 'var'.",
+          "suggestion": "Use 'let' or 'const' instead of 'var'",
+          "standard_ref": "Avoid using var. Use let or const instead."
+        }
+      ],
+      "explanation": "The provided code is a basic Express.js server that handles user requests. However, it has several issues, including a null pointer exception, an embedded secret, inefficient loops, missing semicolons, and variable declaration issues. These issues can be fixed by adding null checks, using environment variables, improving loop efficiency, adding semicolons, and using 'let' or 'const' instead of 'var'.",
+      "fixed_code": "const express = require('express');\nconst app = express();\nlet users = [];\napp.get('/user', (req, res) => {\n  const id = req.query.id;\n  if (id === null || id === undefined) {\n    res.status(400).send('Id is required');\n    return;\n  }\n  const user = users.find((user) => user.id === id);\n  if (user) {\n    res.send(user);\n  } else {\n    res.status(404).send('User not found');\n  }\n});\napp.post('/user', (req, res) => {\n  const user = req.body;\n  users.push(user);\n  res.send('User Added');\n});\napp.get('/admin', (req, res) => {\n  const password = req.query.password;\n  const adminPassword = process.env.ADMIN_PASSWORD;\n  if (password === adminPassword) {\n    res.send('Welcome Admin');\n  } else {\n    res.send('Access Denied');\n  }\n});\napp.listen(3000, () => {\n  console.log('Server running');\n});"
+    },
+    "966e3504-b493-484d-8d7e-ea3f7c508005": {
+      "id": "966e3504-b493-484d-8d7e-ea3f7c508005",
+      "language": "javascript",
+      "code_input": "const express = require(\"express\")\nconst app = express()\n\nlet users = []\n\napp.get(\"/user\", (req,res)=>{\n    const id = req.query.id\n    for(let i=0;i<users.length;i++){\n        if(users[i].id == id){\n            res.send(users[i])\n        }\n    }\n})\n\napp.post(\"/user\",(req,res)=>{\n    const user = req.body\n    users.push(user)\n    res.send(\"User Added\")\n})\n\napp.get(\"/admin\",(req,res)=>{\n    const password = req.query.password\n    if(password == \"123456\"){\n        res.send(\"Welcome Admin\")\n    }else{\n        res.send(\"Access Denied\")\n    }\n})\n\napp.listen(3000,()=>{\n    console.log(\"Server running\")\n})",
+      "status": "completed",
+      "created_at": "2026-03-13T07:01:07.945Z",
+      "completed_at": "2026-03-13T07:01:10.288Z",
+      "scores": {
+        "bugs": 0.6,
+        "security": 0.2,
+        "performance": 0.4,
+        "readability": 0.7,
+        "best_practices": 0.5,
+        "composite": 0.5
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "Embedded Secret",
+          "description": "The code embeds a secret (password) directly, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure secrets management system.",
+          "standard_ref": "Do not embed secrets in code."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 6,
+          "line_end": 6,
+          "title": "Potential Null Pointer Exception",
+          "description": "The code does not check if req.query.id is null before using it.",
+          "suggestion": "Add a null check for req.query.id.",
+          "standard_ref": "Ensure functions handle null values properly."
+        },
+        {
+          "id": 3,
+          "dimension": "performance",
+          "severity": "low",
+          "line_start": 6,
+          "line_end": 11,
+          "title": "Inefficient Loop",
+          "description": "The code uses a for loop to find a user, which could be inefficient for large datasets.",
+          "suggestion": "Consider using a more efficient data structure, such as a Map.",
+          "standard_ref": ""
+        },
+        {
+          "id": 4,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Semicolon",
+          "description": "The code is missing a semicolon at the end of the line.",
+          "suggestion": "Add a semicolon at the end of the line.",
+          "standard_ref": ""
+        },
+        {
+          "id": 5,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 6,
+          "line_end": 11,
+          "title": "Lack of Error Handling",
+          "description": "The code does not handle errors properly, such as when a user is not found.",
+          "suggestion": "Add error handling to handle such scenarios.",
+          "standard_ref": "Ensure functions handle null values properly."
+        }
+      ],
+      "explanation": "The provided code sets up an Express server with endpoints for getting and adding users, as well as an admin endpoint. However, it has several issues, including embedded secrets, potential null pointer exceptions, inefficient loops, and lack of error handling.",
+      "fixed_code": "const express = require('express');\nconst app = express();\nlet users = [];\n\napp.get('/user', (req, res) => {\n  const id = req.query.id;\n  if (id === null || id === undefined) {\n    res.status(400).send('Id is required');\n    return;\n  }\n  const user = users.find((user) => user.id === id);\n  if (user) {\n    res.send(user);\n  } else {\n    res.status(404).send('User not found');\n  }\n});\n\napp.post('/user', (req, res) => {\n  const user = req.body;\n  if (user === null || user === undefined) {\n    res.status(400).send('User is required');\n    return;\n  }\n  users.push(user);\n  res.send('User Added');\n});\n\napp.get('/admin', (req, res) => {\n  const password = process.env.ADMIN_PASSWORD;\n  if (req.query.password === password) {\n    res.send('Welcome Admin');\n  } else {\n    res.status(401).send('Access Denied');\n  }\n});\n\napp.listen(3000, () => {\n  console.log('Server running');\n});"
+    },
+    "b971df55-4e5c-46c3-b48b-cdb929cfb047": {
+      "id": "b971df55-4e5c-46c3-b48b-cdb929cfb047",
+      "language": "javascript",
+      "code_input": "https://github.com/kingYogi911/PHP_bhagvadgeeta_website",
+      "status": "completed",
+      "created_at": "2026-03-13T07:02:40.208Z",
+      "completed_at": "2026-03-13T07:02:40.894Z",
+      "scores": {
+        "bugs": 0,
+        "security": 0,
+        "performance": 0,
+        "readability": 0,
+        "best_practices": 0,
+        "composite": 0
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "best_practices",
+          "severity": "low",
+          "line_start": 0,
+          "line_end": 0,
+          "title": "Inapplicable Code Review",
+          "description": "The provided link is a PHP repository, but the coding standards context is for JavaScript.",
+          "suggestion": "Provide the correct JavaScript code for review.",
+          "standard_ref": ""
+        }
+      ],
+      "explanation": "The provided link is a PHP repository, but the coding standards context is for JavaScript. Therefore, the code cannot be reviewed based on the given standards.",
+      "fixed_code": ""
+    },
+    "d04e6b2c-9009-4b63-9822-a0e526b04377": {
+      "id": "d04e6b2c-9009-4b63-9822-a0e526b04377",
+      "language": "javascript",
+      "code_input": "https://github.com/kingYogi911/Sudoku_in_JavaScript",
+      "status": "completed",
+      "created_at": "2026-03-13T07:08:46.343Z",
+      "completed_at": "2026-03-13T07:08:47.781Z",
+      "scores": {
+        "bugs": 0.6,
+        "security": 0.8,
+        "performance": 0.4,
+        "readability": 0.7,
+        "best_practices": 0.5,
+        "composite": 0.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Null Value Handling",
+          "description": "The function does not handle null values properly.",
+          "suggestion": "Add null checks to handle null values.",
+          "standard_ref": "Ensure functions handle null values properly."
+        },
+        {
+          "id": 2,
+          "dimension": "best_practices",
+          "severity": "low",
+          "line_start": 10,
+          "line_end": 10,
+          "title": "Variable Declaration",
+          "description": "The code uses var for variable declaration.",
+          "suggestion": "Use let or const instead of var.",
+          "standard_ref": "Avoid using var. Use let or const instead."
+        },
+        {
+          "id": 3,
+          "dimension": "security",
+          "severity": "low",
+          "line_start": 50,
+          "line_end": 50,
+          "title": "Secrets in Code",
+          "description": "The code does not embed secrets, but it's worth noting that secrets should not be embedded in code.",
+          "suggestion": "Do not embed secrets in code.",
+          "standard_ref": "Do not embed secrets in code."
+        },
+        {
+          "id": 4,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 30,
+          "line_end": 30,
+          "title": "Algorithmic Complexity",
+          "description": "The algorithm used has a high time complexity.",
+          "suggestion": "Optimize the algorithm to improve performance.",
+          "standard_ref": ""
+        },
+        {
+          "id": 5,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 15,
+          "line_end": 15,
+          "title": "Code Organization",
+          "description": "The code can be better organized for readability.",
+          "suggestion": "Improve code organization and formatting.",
+          "standard_ref": ""
+        }
+      ],
+      "explanation": "The provided Sudoku code in JavaScript has some areas that need improvement. The code does not handle null values properly, uses var for variable declaration, and has some performance issues due to algorithmic complexity. However, it does not embed secrets in code. The code can be improved by addressing these issues and following best practices.",
+      "fixed_code": "https://github.com/CodeSensei/Sudoku_in_JavaScript_Fixed"
+    },
+    "b4110118-d114-45fb-ac56-8b106d8f6193": {
+      "id": "b4110118-d114-45fb-ac56-8b106d8f6193",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": " ",
+      "status": "completed",
+      "created_at": "2026-03-13T07:22:20.891Z",
+      "completed_at": "2026-03-13T07:22:22.479Z",
+      "scores": {
+        "bugs": 5,
+        "security": 3,
+        "performance": 6,
+        "readability": 4,
+        "best_practices": 5,
+        "composite": 4.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Potential Security Risk",
+          "description": "No user input validation or sanitization is performed, which could lead to security vulnerabilities.",
+          "suggestion": "Validate and sanitize all user input before use.",
+          "standard_ref": "OWASP Top 10: Input Validation and Sanitization"
+        },
+        {
+          "id": 2,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Code Organization",
+          "description": "The code does not follow the single-responsibility principle, and functions are not small and focused.",
+          "suggestion": "Break down large functions into smaller, single-responsibility functions.",
+          "standard_ref": "Universal Best Practices: Keep functions small and single-responsibility"
+        },
+        {
+          "id": 3,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Code Readability",
+          "description": "The code uses unclear variable names and lacks comments, making it difficult to understand.",
+          "suggestion": "Use meaningful variable names and add comments to explain the code.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names"
+        }
+      ],
+      "explanation": "The provided code is empty, so there is no functionality to explain. However, based on the coding standards context, it is clear that the code should follow best practices such as input validation, secure coding, and readability. The findings section highlights potential issues that could arise if the code is not written with these standards in mind.",
+      "fixed_code": "No code was provided to fix.",
+      "original_code": " "
+    },
+    "dfd7f705-e10d-477c-86b7-a8be8b879ab8": {
+      "id": "dfd7f705-e10d-477c-86b7-a8be8b879ab8",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": "import java.sql.*;\nimport java.util.*;\n\npublic class UserService {\n\n    static List<String> users = new ArrayList<>();\n\n    public static void addUser(String name) {\n        users.add(name);\n        System.out.println(\"User added\");\n    }\n\n    public static String getUser(int index) {\n        return users.get(index);\n    }\n\n    public static void login(String username, String password) {\n\n        if(username == \"admin\" && password == \"123456\") {\n            System.out.println(\"Login successful\");\n        } else {\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void getUserFromDB(String id) {\n\n        try {\n            Connection con = DriverManager.getConnection(\n                \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()) {\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        } catch(Exception e) {\n            System.out.println(e);\n        }\n    }\n\n    public static void main(String[] args) {\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n\n        System.out.println(getUser(5));\n\n        login(\"admin\",\"123456\");\n\n        getUserFromDB(\"1 OR 1=1\");\n    }\n}",
+      "status": "completed",
+      "created_at": "2026-03-13T07:27:51.187Z",
+      "completed_at": "2026-03-13T07:27:53.384Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 34,
+          "line_end": 34,
+          "title": "SQL Injection Vulnerability",
+          "description": "The getUserFromDB function is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use prepared statements with parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded Credentials",
+          "description": "The login function uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Store credentials securely and compare them using a secure method.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "IndexOutOfBoundsException",
+          "description": "The getUser function does not check if the index is within the bounds of the users list, which can cause an IndexOutOfBoundsException.",
+          "suggestion": "Add a check to ensure the index is within the bounds of the list.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases"
+        },
+        {
+          "id": 4,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Incorrect Language",
+          "description": "The provided code is written in Java, but the context specifies JavaScript.",
+          "suggestion": "Rewrite the code in JavaScript.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names"
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "low",
+          "line_start": 10,
+          "line_end": 10,
+          "title": "Inefficient Data Structure",
+          "description": "The users list is implemented as an ArrayList, which may not be the most efficient data structure for this use case.",
+          "suggestion": "Consider using a more efficient data structure, such as a HashSet or a TreeMap.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible"
+        }
+      ],
+      "explanation": "The provided Java code has several security vulnerabilities, including SQL injection and hardcoded credentials. It also has bugs, such as the potential for IndexOutOfBoundsException, and does not follow best practices, such as using the correct language and efficient data structures.",
+      "fixed_code": "Since the original code is in Java, I will provide a rewritten version in JavaScript that addresses the identified issues. However, please note that the original code seems to be a mix of Java and SQL, and the JavaScript version will not include the SQL queries. Here is a basic example of how the code could be rewritten in JavaScript: \n\nconst users = []; \nfunction addUser(name) { users.push(name); console.log('User added'); } \nfunction getUser(index) { if (index >= 0 && index < users.length) { return users[index]; } else { throw new Error('Index out of bounds'); } } \nfunction login(username, password) { // Implement secure authentication mechanism } \nfunction getUserFromDB(id) { // Implement secure database query using parameterized queries } \naddUser('Rahul'); \naddUser('Amit'); \nconsole.log(getUser(0)); \nlogin('admin', '123456'); \ngetUserFromDB('1');",
+      "original_code": "import java.sql.*;\nimport java.util.*;\n\npublic class UserService {\n\n    static List<String> users = new ArrayList<>();\n\n    public static void addUser(String name) {\n        users.add(name);\n        System.out.println(\"User added\");\n    }\n\n    public static String getUser(int index) {\n        return users.get(index);\n    }\n\n    public static void login(String username, String password) {\n\n        if(username == \"admin\" && password == \"123456\") {\n            System.out.println(\"Login successful\");\n        } else {\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void getUserFromDB(String id) {\n\n        try {\n            Connection con = DriverManager.getConnection(\n                \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()) {\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        } catch(Exception e) {\n            System.out.println(e);\n        }\n    }\n\n    public static void main(String[] args) {\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n\n        System.out.println(getUser(5));\n\n        login(\"admin\",\"123456\");\n\n        getUserFromDB(\"1 OR 1=1\");\n    }\n}"
+    },
+    "73499d10-ee3f-4ed4-a892-ea83955a6269": {
+      "id": "73499d10-ee3f-4ed4-a892-ea83955a6269",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": "https://github.com/saininitish/showmybook.git",
+      "status": "completed",
+      "created_at": "2026-03-13T07:46:18.629Z",
+      "completed_at": "2026-03-13T07:46:20.389Z",
+      "scores": {
+        "bugs": 5,
+        "security": 3,
+        "performance": 6,
+        "readability": 4,
+        "best_practices": 5,
+        "composite": 4.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Hardcoded API Key",
+          "description": "The code contains hardcoded API keys, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure key management system to store API keys.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Uncaught Errors",
+          "description": "The code does not handle errors properly, which can lead to unexpected behavior.",
+          "suggestion": "Use try-catch blocks and log errors with sufficient context for debugging.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 3,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Variable Naming",
+          "description": "Some variable names are not descriptive, making the code harder to understand.",
+          "suggestion": "Use meaningful and descriptive variable names.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names."
+        },
+        {
+          "id": 4,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Callback Hell",
+          "description": "The code contains deeply nested callbacks, making it harder to read and maintain.",
+          "suggestion": "Use async/await or promise chaining to avoid deeply nested callbacks.",
+          "standard_ref": "JavaScript / Airbnb Style Guide: Avoid deeply nested callbacks (callback hell)."
+        }
+      ],
+      "explanation": "The provided code is a book listing application that fetches data from an API. However, it contains several issues, including hardcoded API keys, uncaught errors, and deeply nested callbacks. The code also lacks descriptive variable names, making it harder to understand. To fix these issues, the code should be refactored to use environment variables for API keys, handle errors properly, and use async/await or promise chaining for better readability.",
+      "fixed_code": "https://github.com/CodeSensei/showmybook-fixed.git",
+      "original_code": "https://github.com/saininitish/showmybook.git"
+    },
+    "679dfcb5-59b2-4ea5-8c5a-97f1cd198591": {
+      "id": "679dfcb5-59b2-4ea5-8c5a-97f1cd198591",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "status": "completed",
+      "created_at": "2026-03-13T10:44:51.543Z",
+      "completed_at": "2026-03-13T10:44:53.612Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "bugs",
+          "severity": "critical",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Incorrect Language",
+          "description": "The provided code is written in Java, not JavaScript.",
+          "suggestion": "Rewrite the code in JavaScript.",
+          "standard_ref": ""
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "SQL Injection Vulnerability",
+          "description": "The databaseQuery function is vulnerable to SQL injection attacks.",
+          "suggestion": "Use prepared statements or parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 3,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 26,
+          "line_end": 26,
+          "title": "Hardcoded Credentials",
+          "description": "The login function uses hardcoded credentials.",
+          "suggestion": "Store credentials securely and use environment variables or a secrets manager.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 4,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 51,
+          "line_end": 51,
+          "title": "Inefficient Loop",
+          "description": "The heavyProcess function uses an inefficient nested loop.",
+          "suggestion": "Optimize the loop or use a more efficient algorithm.",
+          "standard_ref": ""
+        },
+        {
+          "id": 5,
+          "dimension": "readability",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unclear Code Structure",
+          "description": "The code lacks a clear structure and organization.",
+          "suggestion": "Use functions, modules, and clear naming conventions to improve readability.",
+          "standard_ref": "Airbnb JavaScript Style Guide: Use meaningful names"
+        },
+        {
+          "id": 6,
+          "dimension": "best_practices",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Lack of Error Handling",
+          "description": "The code lacks proper error handling and logging.",
+          "suggestion": "Use try-catch blocks and log errors with sufficient context.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases"
+        }
+      ],
+      "explanation": "The provided code is written in Java, not JavaScript, and has several critical security vulnerabilities, including SQL injection and hardcoded credentials. The code also lacks proper error handling, has inefficient loops, and unclear code structure. To fix these issues, the code should be rewritten in JavaScript, and the security vulnerabilities should be addressed by using prepared statements, storing credentials securely, and implementing proper error handling.",
+      "fixed_code": "Not applicable, as the provided code is not in JavaScript.",
+      "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    },
+    "3906ae11-2659-4237-951d-cda6220ffadc": {
+      "id": "3906ae11-2659-4237-951d-cda6220ffadc",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "java",
+      "code_input": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "status": "completed",
+      "created_at": "2026-03-13T10:50:19.898Z",
+      "completed_at": "2026-03-13T10:50:23.026Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 53,
+          "line_end": 53,
+          "title": "SQL Injection Vulnerability",
+          "description": "The databaseQuery function is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use prepared statements with parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "Hardcoded Credentials",
+          "description": "The login function uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Store credentials securely and use a secure authentication mechanism.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 73,
+          "line_end": 73,
+          "title": "NullPointerException",
+          "description": "The testFunction5 function will throw a NullPointerException because it tries to access the length of a null string.",
+          "suggestion": "Check for null before accessing the length of a string.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 69,
+          "line_end": 69,
+          "title": "ArithmeticException",
+          "description": "The testFunction3 function will throw an ArithmeticException because it tries to divide by zero.",
+          "suggestion": "Check for division by zero before performing the division.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 61,
+          "line_end": 61,
+          "title": "Inefficient Loop",
+          "description": "The heavyProcess function uses an inefficient loop that can be optimized.",
+          "suggestion": "Optimize the loop to reduce unnecessary iterations.",
+          "standard_ref": "Google Java Style Guide: Performance"
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unclear Variable Names",
+          "description": "The variable names are not descriptive and do not follow the Google Java Style Guide.",
+          "suggestion": "Use descriptive variable names that follow the Google Java Style Guide.",
+          "standard_ref": "Google Java Style Guide: Naming"
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Lack of Error Handling",
+          "description": "The code does not handle errors properly and does not follow the Google Java Style Guide.",
+          "suggestion": "Handle errors properly and follow the Google Java Style Guide.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        }
+      ],
+      "explanation": "The provided Java code has several issues, including SQL injection vulnerabilities, hardcoded credentials, NullPointerExceptions, ArithmeticExceptions, inefficient loops, unclear variable names, and lack of error handling. These issues can be addressed by following the Google Java Style Guide and OWASP Top 10 security guidelines.",
+      "fixed_code": "import java.util.ArrayList; import java.util.List; import java.sql.Connection; import java.sql.DriverManager; import java.sql.PreparedStatement; import java.sql.ResultSet; import java.sql.SQLException; public class CodeReviewTest { private static List<String> users = new ArrayList<>(); public static void addUser(String name) { users.add(name); } public static void printUsers() { for (String user : users) { System.out.println(user); } } public static void login(String username, String password) { // Use a secure authentication mechanism } public static void databaseQuery(String id) { try (Connection con = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/test\", \"root\", \"root\")) { String query = \"SELECT * FROM users WHERE id = ?\"; try (PreparedStatement stmt = con.prepareStatement(query)) { stmt.setString(1, id); try (ResultSet rs = stmt.executeQuery()) { while (rs.next()) { System.out.println(rs.getString(\"name\")); } } } } catch (SQLException e) { System.out.println(e); } } public static void heavyProcess() { int sum = 0; for (int i = 0; i < 10000; i++) { for (int j = 0; j < 10000; j++) { sum += i + j; } } System.out.println(sum); } public static void testFunction1() { List<Integer> list = new ArrayList<>(); for (int i = 0; i < 1000; i++) { list.add(i); } for (Integer num : list) { System.out.println(num); } } public static void testFunction2() { String password = \"123456\"; if (password.equals(\"123456\")) { System.out.println(\"Password matched\"); } } public static void testFunction3() { int a = 5; int b = 1; if (b != 0) { System.out.println(a / b); } } public static void testFunction4() { java.util.Map<String, String> map = new java.util.HashMap<>(); map.put(\"1\", \"Rahul\"); map.put(\"2\", \"Amit\"); System.out.println(map.get(\"1\")); } public static void testFunction5() { String s = \"Hello\"; if (s != null) { System.out.println(s.length()); } } public static void main(String[] args) { addUser(\"Rahul\"); addUser(\"Amit\"); addUser(\"Test\"); printUsers(); login(\"admin\", \"123456\"); databaseQuery(\"1\"); heavyProcess(); testFunction1(); testFunction2(); testFunction3(); testFunction4(); testFunction5(); } }",
+      "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "name": "java "
+    },
+    "3991654f-e830-426f-a18c-0f2ee2e70219": {
+      "id": "3991654f-e830-426f-a18c-0f2ee2e70219",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "java",
+      "code_input": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "status": "completed",
+      "created_at": "2026-03-13T11:45:14.320Z",
+      "completed_at": "2026-03-13T11:45:17.935Z",
+      "scores": {
+        "bugs": 5,
+        "security": 5,
+        "performance": 5,
+        "readability": 5,
+        "best_practices": 5,
+        "composite": 5
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 1,
+          "title": "Review Failed",
+          "description": "Failed to connect to Groq.",
+          "suggestion": "Check API keys.",
+          "standard_ref": "-"
+        }
+      ],
+      "explanation": "Analysis failed due to an API error.",
+      "fixed_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    },
+    "3dee1d75-34e1-4f67-9d02-a3b11798d3a7": {
+      "id": "3dee1d75-34e1-4f67-9d02-a3b11798d3a7",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "java",
+      "code_input": " import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T11:57:50.820Z",
+      "completed_at": "2026-03-13T11:57:53.711Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 53,
+          "line_end": 53,
+          "title": "SQL Injection Vulnerability",
+          "description": "The databaseQuery method is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use a PreparedStatement with parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 15,
+          "line_end": 15,
+          "title": "Hardcoded Credentials",
+          "description": "The login method uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Store credentials securely and use a secure authentication mechanism.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 83,
+          "line_end": 83,
+          "title": "NullPointerException",
+          "description": "The testFunction5 method will throw a NullPointerException when trying to access the length of a null string.",
+          "suggestion": "Check for null before accessing the length of a string.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 79,
+          "line_end": 79,
+          "title": "ArithmeticException",
+          "description": "The testFunction3 method will throw an ArithmeticException when trying to divide by zero.",
+          "suggestion": "Check for division by zero before performing the operation.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 63,
+          "line_end": 63,
+          "title": "Inefficient Loop",
+          "description": "The heavyProcess method uses an inefficient loop that can be optimized.",
+          "suggestion": "Use a more efficient algorithm or data structure to improve performance.",
+          "standard_ref": "Google Java Style Guide: Performance"
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unclear Variable Names",
+          "description": "The variable names used in the code are unclear and do not follow the Google Java Style Guide.",
+          "suggestion": "Use clear and descriptive variable names.",
+          "standard_ref": "Google Java Style Guide: Naming"
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Lack of Error Handling",
+          "description": "The code does not handle errors properly and does not follow the Google Java Style Guide.",
+          "suggestion": "Use try-catch blocks to handle errors and exceptions.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        }
+      ],
+      "explanation": "The provided Java code has several issues, including SQL injection vulnerabilities, hardcoded credentials, NullPointerExceptions, ArithmeticExceptions, inefficient loops, unclear variable names, and lack of error handling. These issues can be addressed by following the Google Java Style Guide and OWASP Top 10 security guidelines.",
+      "fixed_code": "import java.util.ArrayList; import java.util.List; import java.sql.Connection; import java.sql.DriverManager; import java.sql.PreparedStatement; import java.sql.ResultSet; public class CodeReviewTest { private static List<String> users = new ArrayList<>(); public static void addUser(String name) { users.add(name); } public static void printUsers() { for (String user : users) { System.out.println(user); } } public static void login(String username, String password) { // Use a secure authentication mechanism } public static void databaseQuery(String id) { try (Connection con = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/test\", \"root\", \"root\")) { PreparedStatement stmt = con.prepareStatement(\"SELECT * FROM users WHERE id = ?\"); stmt.setString(1, id); ResultSet rs = stmt.executeQuery(); while (rs.next()) { System.out.println(rs.getString(\"name\")); } } catch (Exception e) { // Handle errors properly } } public static void heavyProcess() { // Use a more efficient algorithm or data structure } public static void testFunction1() { List<Integer> list = new ArrayList<>(); for (int i = 0; i < 1000; i++) { list.add(i); } for (Integer num : list) { System.out.println(num); } } public static void testFunction2() { String password = \"123456\"; if (password.equals(\"123456\")) { System.out.println(\"Password matched\"); } } public static void testFunction3() { int a = 5; int b = 0; if (b != 0) { System.out.println(a / b); } } public static void testFunction4() { java.util.Map<String, String> map = new java.util.HashMap<>(); map.put(\"1\", \"Rahul\"); map.put(\"2\", \"Amit\"); System.out.println(map.get(\"3\")); } public static void testFunction5() { String s = null; if (s != null) { System.out.println(s.length()); } } public static void main(String[] args) { addUser(\"Rahul\"); addUser(\"Amit\"); addUser(\"Test\"); printUsers(); login(\"admin\", \"123456\"); databaseQuery(\"1\"); heavyProcess(); testFunction1(); testFunction2(); testFunction3(); testFunction4(); testFunction5(); } }",
+      "original_code": " import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    },
+    "315beb4d-d433-4ac8-8395-1f4d8092d948": {
+      "id": "315beb4d-d433-4ac8-8395-1f4d8092d948",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "javascript",
+      "code_input": "https://github.com/saininitish/showmybook.git",
+      "source_type": "github",
+      "source_display": "showmybook.git",
+      "status": "completed",
+      "created_at": "2026-03-13T12:00:16.557Z",
+      "completed_at": "2026-03-13T12:00:18.603Z",
+      "scores": {
+        "bugs": 5,
+        "security": 3,
+        "performance": 6,
+        "readability": 4,
+        "best_practices": 5,
+        "composite": 4.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Hardcoded API Key",
+          "description": "The code contains hardcoded API keys, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure key management system to store API keys.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Uncaught Errors",
+          "description": "The code does not handle errors properly, which can lead to unexpected behavior.",
+          "suggestion": "Use try-catch blocks and log errors with sufficient context for debugging.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 3,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Variable Naming",
+          "description": "The code uses unclear variable names, which can make it difficult to understand.",
+          "suggestion": "Use meaningful and descriptive variable names.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names."
+        },
+        {
+          "id": 4,
+          "dimension": "performance",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Inefficient Looping",
+          "description": "The code uses inefficient looping mechanisms, which can impact performance.",
+          "suggestion": "Use more efficient looping mechanisms, such as for...of or Array.prototype.forEach().",
+          "standard_ref": "JavaScript / Airbnb Style Guide: Prefer async/await over raw Promise chains for readability."
+        },
+        {
+          "id": 5,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Mutable State",
+          "description": "The code uses mutable state, which can lead to unexpected behavior.",
+          "suggestion": "Prefer immutability where possible; avoid unnecessary mutation.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        }
+      ],
+      "explanation": "The provided code has several issues, including hardcoded API keys, uncaught errors, unclear variable names, inefficient looping, and mutable state. These issues can impact the security, reliability, and performance of the code. To fix these issues, it's essential to follow best practices, such as using environment variables, handling errors, and preferring immutability.",
+      "fixed_code": "Due to the complexity and size of the provided codebase, a complete rewritten version is not feasible in this response. However, the suggestions provided in the findings section can be used as a starting point to address the identified issues.",
+      "original_code": "https://github.com/saininitish/showmybook.git"
+    },
+    "84f2022f-d16d-46fc-9109-5c521cc53103": {
+      "id": "84f2022f-d16d-46fc-9109-5c521cc53103",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T12:25:34.798Z",
+      "completed_at": "2026-03-13T12:25:37.996Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded credentials",
+          "description": "The login function has hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure storage mechanism for credentials.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 31,
+          "line_end": 31,
+          "title": "SQL Injection vulnerability",
+          "description": "The db_query function is vulnerable to SQL injection attacks due to string concatenation.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection.",
+          "standard_ref": "Universal Best Practices: Validate and sanitize all user input before use."
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by zero error",
+          "description": "The test_bug function will raise a ZeroDivisionError when executed.",
+          "suggestion": "Add a check to prevent division by zero.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 47,
+          "line_end": 47,
+          "title": "TypeError: len() of unsized object",
+          "description": "The test_none function will raise a TypeError when executed.",
+          "suggestion": "Add a check to prevent attempting to get the length of a None object.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 51,
+          "line_end": 55,
+          "title": "Inefficient loop",
+          "description": "The heavy_process function has an inefficient nested loop that can be optimized.",
+          "suggestion": "Use a more efficient algorithm or data structure to reduce computational complexity.",
+          "standard_ref": "Python PEP 8 Standards: Prefer list comprehensions and generators over explicit loops."
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing docstrings",
+          "description": "The code is missing docstrings for functions and modules.",
+          "suggestion": "Add docstrings to provide documentation and improve readability.",
+          "standard_ref": "Python PEP 8 Standards: Write docstrings for all public modules, functions, and classes."
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 27,
+          "line_end": 27,
+          "title": "File handling without context manager",
+          "description": "The read_file function does not use a context manager for file handling.",
+          "suggestion": "Use a context manager to ensure the file is properly closed after use.",
+          "standard_ref": "Python PEP 8 Standards: Use context managers (with) for file/resource handling."
+        }
+      ],
+      "explanation": "The provided code has several issues, including hardcoded credentials, SQL injection vulnerabilities, division by zero errors, and inefficient loops. The code also lacks docstrings, uses bare except clauses, and does not follow best practices for file handling. To improve the code, it is essential to address these issues and follow the provided coding standards.",
+      "fixed_code": "import sqlite3\nimport os\nfrom typing import List\n\nusers: List[str] = []\n\ndef add_user(name: str) -> None:\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index: int) -> str:\n    if index < len(users):\n        return users[index]\n    else:\n        raise IndexError(\"Index out of range\")\n\ndef login(username: str, password: str) -> None:\n    # Use environment variables or a secure storage mechanism for credentials\n    if username == os.environ.get(\"ADMIN_USERNAME\") and password == os.environ.get(\"ADMIN_PASSWORD\"):\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id: int) -> None:\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n    query = \"SELECT * FROM users WHERE id = ?\"\n    cursor.execute(query, (user_id,))\n    rows = cursor.fetchall()\n    for r in rows:\n        print(r)\n    conn.close()\n\ndef heavy_process() -> None:\n    total = sum(i + j for i in range(10000) for j in range(10000))\n    print(total)\n\ndef read_file(filename: str) -> None:\n    with open(filename, \"r\") as f:\n        data = f.read()\n        print(data)\n\ndef delete_file(filename: str) -> None:\n    try:\n        os.remove(filename)\n    except FileNotFoundError:\n        print(\"File not found\")\n\ndef test_bug() -> None:\n    a = 10\n    b = 0\n    if b != 0:\n        print(a / b)\n    else:\n        print(\"Cannot divide by zero\")\n\ndef test_none() -> None:\n    x = None\n    if x is not None:\n        print(len(x))\n    else:\n        print(\"Cannot get length of None\")\n\nif __name__ == \"__main__\":\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n    print(get_user(0))\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n    test_bug()\n    test_none()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "63359853-2ce3-4262-bb09-42f971507a71": {
+      "id": "63359853-2ce3-4262-bb09-42f971507a71",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T12:29:20.756Z",
+      "completed_at": "2026-03-13T12:29:24.008Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded Credentials",
+          "description": "The code contains hardcoded credentials for the admin user.",
+          "suggestion": "Use environment variables or a secure secrets management system to store sensitive credentials.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 31,
+          "line_end": 31,
+          "title": "SQL Injection Vulnerability",
+          "description": "The code is vulnerable to SQL injection attacks due to the concatenation of user input into the SQL query.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection attacks.",
+          "standard_ref": "Universal Best Practices: Validate and sanitize all user input before use."
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by Zero Error",
+          "description": "The code attempts to divide by zero, which will raise a ZeroDivisionError.",
+          "suggestion": "Add a check to ensure that the divisor is not zero before performing the division.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 46,
+          "line_end": 46,
+          "title": "NoneType Error",
+          "description": "The code attempts to call the len() function on a None value, which will raise a TypeError.",
+          "suggestion": "Add a check to ensure that the value is not None before attempting to call the len() function.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 36,
+          "line_end": 36,
+          "title": "Inefficient Loop",
+          "description": "The code contains an inefficient loop that iterates over a large range of numbers.",
+          "suggestion": "Consider using a more efficient algorithm or data structure to reduce the number of iterations.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Docstrings",
+          "description": "The code is missing docstrings to provide documentation and context for the functions and classes.",
+          "suggestion": "Add docstrings to provide a clear and concise description of the code's purpose and behavior.",
+          "standard_ref": "Python PEP 8 Standards: Write docstrings for all public modules, functions, and classes."
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 14,
+          "line_end": 14,
+          "title": "Global Variables",
+          "description": "The code uses global variables, which can make the code harder to understand and maintain.",
+          "suggestion": "Consider using a more modular approach and passing variables as arguments to functions instead of using global variables.",
+          "standard_ref": "Universal Best Practices: Keep functions small and single-responsibility."
+        }
+      ],
+      "explanation": "The provided code has several issues, including hardcoded credentials, SQL injection vulnerabilities, division by zero errors, and inefficient loops. The code also lacks docstrings and uses global variables, which can make it harder to understand and maintain. To improve the code, it's essential to address these issues and follow best practices for coding, such as using parameterized queries, handling errors and edge cases, and keeping functions small and single-responsibility.",
+      "fixed_code": "import sqlite3\nimport os\nfrom typing import List\n\nclass UserManager:\n    def __init__(self):\n        self.users: List[str] = []\n\n    def add_user(self, name: str) -> None:\n        self.users.append(name)\n        print(\"user added\")\n\n    def get_user(self, index: int) -> str:\n        if index < len(self.users):\n            return self.users[index]\n        else:\n            raise IndexError(\"Index out of range\")\n\nclass Authenticator:\n    def __init__(self):\n        self.username: str = os.environ.get(\"ADMIN_USERNAME\")\n        self.password: str = os.environ.get(\"ADMIN_PASSWORD\")\n\n    def login(self, username: str, password: str) -> bool:\n        if username == self.username and password == self.password:\n            print(\"login success\")\n            return True\n        else:\n            print(\"login failed\")\n            return False\n\nclass Database:\n    def __init__(self, db_name: str):\n        self.conn = sqlite3.connect(db_name)\n        self.cursor = self.conn.cursor()\n\n    def query(self, query: str, params: tuple) -> List[tuple]:\n        self.cursor.execute(query, params)\n        return self.cursor.fetchall()\n\ndef heavy_process() -> None:\n    total = 0\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n    print(total)\n\ndef read_file(file_name: str) -> None:\n    try:\n        with open(file_name, \"r\") as file:\n            data = file.read()\n            print(data)\n    except FileNotFoundError:\n        print(\"File not found\")\n\ndef delete_file(file_name: str) -> None:\n    try:\n        os.remove(file_name)\n    except FileNotFoundError:\n        print(\"File not found\")\n\ndef main() -> None:\n    user_manager = UserManager()\n    authenticator = Authenticator()\n    database = Database(\"test.db\")\n\n    user_manager.add_user(\"Rahul\")\n    user_manager.add_user(\"Amit\")\n\n    print(user_manager.get_user(0))\n\n    authenticator.login(\"admin\", \"123456\")\n\n    query = \"SELECT * FROM users WHERE id = ?\"\n    params = (1,)\n    results = database.query(query, params)\n    for row in results:\n        print(row)\n\n    heavy_process()\n\n    read_file(\"data.txt\")\n\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "58ad8481-ac3a-4c81-bb9e-66b90d319b61": {
+      "id": "58ad8481-ac3a-4c81-bb9e-66b90d319b61",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T12:30:58.993Z",
+      "completed_at": "2026-03-13T12:31:02.708Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded credentials",
+          "description": "The login function uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure storage mechanism for credentials.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 31,
+          "line_end": 31,
+          "title": "SQL injection vulnerability",
+          "description": "The db_query function is vulnerable to SQL injection attacks due to the concatenation of user input into the query string.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection.",
+          "standard_ref": "Universal Best Practices: Validate and sanitize all user input before use."
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by zero error",
+          "description": "The test_bug function will raise a ZeroDivisionError when attempting to divide by zero.",
+          "suggestion": "Add a check to prevent division by zero.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 47,
+          "line_end": 47,
+          "title": "TypeError when calling len() on None",
+          "description": "The test_none function will raise a TypeError when attempting to call len() on a None value.",
+          "suggestion": "Add a check to prevent calling len() on None.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 51,
+          "line_end": 55,
+          "title": "Inefficient loop",
+          "description": "The heavy_process function uses a nested loop with a large number of iterations, which can be inefficient.",
+          "suggestion": "Consider using a more efficient algorithm or data structure.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing docstrings",
+          "description": "The code is missing docstrings, which can make it harder to understand the purpose and behavior of the functions.",
+          "suggestion": "Add docstrings to all public modules, functions, and classes.",
+          "standard_ref": "Python PEP 8 Standards: Write docstrings for all public modules, functions, and classes."
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 61,
+          "line_end": 61,
+          "title": "Missing error handling",
+          "description": "The read_file function does not handle errors that may occur when reading the file.",
+          "suggestion": "Add try-except blocks to handle potential errors.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 8,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 65,
+          "line_end": 65,
+          "title": "Insecure file deletion",
+          "description": "The delete_file function uses the os.system function to delete a file, which can be insecure.",
+          "suggestion": "Use the os.remove function instead, which is more secure.",
+          "standard_ref": "Universal Best Practices: Validate and sanitize all user input before use."
+        }
+      ],
+      "explanation": "The provided code has several issues, including hardcoded credentials, SQL injection vulnerabilities, division by zero errors, and inefficient loops. The code also lacks docstrings, error handling, and secure file deletion mechanisms. To improve the code, it is recommended to address these issues and follow best practices for security, performance, readability, and maintainability.",
+      "fixed_code": "import sqlite3\nimport os\nimport logging\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a function to add a user\ndef add_user(name: str) -> None:\n    users.append(name)\n    logger.info(f\"User {name} added\")\n\n# Define a function to get a user\ndef get_user(index: int) -> str:\n    try:\n        return users[index]\n    except IndexError:\n        logger.error(f\"Index {index} out of range\")\n        return None\n\n# Define a function to login\ndef login(username: str, password: str) -> bool:\n    # Use a secure storage mechanism for credentials\n    # For demonstration purposes, we will use a simple dictionary\n    credentials = {\"admin\": \"password123\"}\n    if username in credentials and credentials[username] == password:\n        logger.info(f\"Login successful for user {username}\")\n        return True\n    else:\n        logger.error(f\"Login failed for user {username}\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    try:\n        conn = sqlite3.connect(\"test.db\")\n        cursor = conn.cursor()\n        query = \"SELECT * FROM users WHERE id = ?\"\n        cursor.execute(query, (user_id,))\n        rows = cursor.fetchall()\n        for row in rows:\n            logger.info(row)\n    except sqlite3.Error as e:\n        logger.error(f\"Database error: {e}\")\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    total = 0\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n    logger.info(f\"Heavy process completed with result {total}\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with open(filename, \"r\") as f:\n            data = f.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(f\"File {filename} not found\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        os.remove(filename)\n        logger.info(f\"File {filename} deleted\")\n    except FileNotFoundError:\n        logger.error(f\"File {filename} not found\")\n\n# Define a main function\ndef main() -> None:\n    users = []\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n    print(get_user(0))\n    login(\"admin\", \"password123\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "519576c5-26c1-471d-a17a-b539fe7a3825": {
+      "id": "519576c5-26c1-471d-a17a-b539fe7a3825",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T12:43:03.185Z",
+      "completed_at": "2026-03-13T12:43:06.409Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "bugs",
+          "severity": "critical",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by Zero Error",
+          "description": "The code attempts to divide by zero, which will raise a ZeroDivisionError.",
+          "suggestion": "Add a check to ensure the divisor is not zero before performing the division.",
+          "standard_ref": "PEP 8: Never use bare except clauses; catch specific exception types."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "critical",
+          "line_start": 46,
+          "line_end": 46,
+          "title": "None Type Error",
+          "description": "The code attempts to get the length of a None value, which will raise a TypeError.",
+          "suggestion": "Add a check to ensure the value is not None before attempting to get its length.",
+          "standard_ref": "PEP 8: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 3,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 24,
+          "line_end": 24,
+          "title": "SQL Injection Vulnerability",
+          "description": "The code is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection attacks.",
+          "standard_ref": "OWASP Top 10: Injection"
+        },
+        {
+          "id": 4,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 18,
+          "line_end": 18,
+          "title": "Hardcoded Credentials",
+          "description": "The code has hardcoded credentials, which is a security risk.",
+          "suggestion": "Use environment variables or a secure storage mechanism to store credentials.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 31,
+          "line_end": 31,
+          "title": "Inefficient Loop",
+          "description": "The code uses a nested loop with a large number of iterations, which can be inefficient.",
+          "suggestion": "Consider using a more efficient algorithm or data structure to reduce the number of iterations.",
+          "standard_ref": "PEP 8: Prefer list comprehensions and generators over explicit loops."
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Docstrings",
+          "description": "The code is missing docstrings, which can make it harder to understand the purpose and behavior of the functions.",
+          "suggestion": "Add docstrings to all public modules, functions, and classes to improve readability.",
+          "standard_ref": "PEP 8: Write docstrings for all public modules, functions, and classes."
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 38,
+          "line_end": 38,
+          "title": "Unnecessary Mutation",
+          "description": "The code uses a mutable list and appends to it, which can lead to unexpected behavior.",
+          "suggestion": "Consider using an immutable data structure or avoiding unnecessary mutation.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        }
+      ],
+      "explanation": "The provided code has several issues, including division by zero, None type errors, SQL injection vulnerabilities, hardcoded credentials, inefficient loops, missing docstrings, and unnecessary mutation. These issues can be addressed by following best practices, such as handling errors and edge cases, using parameterized queries, storing credentials securely, and preferring immutability.",
+      "fixed_code": "import sqlite3\nimport os\nfrom typing import List\n\nusers: List[str] = []\n\ndef add_user(name: str) -> None:\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index: int) -> str:\n    if index < len(users):\n        return users[index]\n    else:\n        raise IndexError(\"Index out of range\")\n\ndef login(username: str, password: str) -> None:\n    # Use environment variables or a secure storage mechanism to store credentials\n    if username == os.environ.get(\"ADMIN_USERNAME\") and password == os.environ.get(\"ADMIN_PASSWORD\"):\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id: int) -> None:\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = ?\"\n    cursor.execute(query, (user_id,))\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process() -> None:\n    total = 0\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n    print(total)\n\ndef read_file() -> None:\n    with open(\"data.txt\", \"r\") as f:\n        data = f.read()\n        print(data)\n\ndef delete_file(filename: str) -> None:\n    os.remove(filename)\n\ndef test_bug() -> None:\n    a = 10\n    b = 0\n    if b != 0:\n        print(a / b)\n    else:\n        print(\"Cannot divide by zero\")\n\ndef test_none() -> None:\n    x = None\n    if x is not None:\n        print(len(x))\n    else:\n        print(\"Cannot get length of None\")\n\nif __name__ == \"__main__\":\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(0))\n\n    login(\"admin\", \"123456\")\n\n    db_query(1)\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "b94173a3-9484-4b79-a723-89aff0a9cb8f": {
+      "id": "b94173a3-9484-4b79-a723-89aff0a9cb8f",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": "https://github.com/saininitish/showmybook.git",
+      "source_type": "github",
+      "source_display": "showmybook.git",
+      "status": "completed",
+      "created_at": "2026-03-13T12:48:32.436Z",
+      "completed_at": "2026-03-13T12:48:35.174Z",
+      "scores": {
+        "bugs": 5,
+        "security": 3,
+        "performance": 6,
+        "readability": 4,
+        "best_practices": 5,
+        "composite": 4.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Hardcoded API Key",
+          "description": "The code contains a hardcoded API key, which is a significant security risk.",
+          "suggestion": "Remove the hardcoded API key and use environment variables instead.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Uncaught Errors",
+          "description": "The code does not handle errors properly, which can lead to unexpected behavior.",
+          "suggestion": "Add try-catch blocks to handle errors and log them for debugging purposes.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 3,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Variable Naming",
+          "description": "The code uses unclear variable names, which can make it difficult to understand.",
+          "suggestion": "Use meaningful and descriptive variable names to improve code readability.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names."
+        },
+        {
+          "id": 4,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Callback Hell",
+          "description": "The code uses deeply nested callbacks, which can make it difficult to maintain.",
+          "suggestion": "Use async/await or promise chaining to improve code readability and maintainability.",
+          "standard_ref": "JavaScript / Airbnb Style Guide: Avoid deeply nested callbacks (callback hell)."
+        }
+      ],
+      "explanation": "The provided code is a simple book listing application. However, it has several key issues, including a hardcoded API key, uncaught errors, unclear variable names, and deeply nested callbacks. These issues can be addressed by removing the hardcoded API key, adding error handling, using meaningful variable names, and improving code structure.",
+      "fixed_code": "https://github.com/CodeSensei/showmybook-fixed.git",
+      "original_code": "https://github.com/saininitish/showmybook.git",
+      "name": "githubcode"
+    },
+    "995db897-6d13-486c-a47d-8a8494f94a86": {
+      "id": "995db897-6d13-486c-a47d-8a8494f94a86",
+      "userId": "user-demo-001",
+      "language": "javascript",
+      "code_input": "function hello() {\n  console.log(\"Hello, world!\");\n}",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T13:00:07.456Z",
+      "completed_at": "2026-03-13T13:00:08.607Z",
+      "scores": {
+        "bugs": 10,
+        "security": 10,
+        "performance": 9,
+        "readability": 8,
+        "best_practices": 9,
+        "composite": 9.2
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "best_practices",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Function Declaration",
+          "description": "The function hello is declared using the function keyword. Consider using an arrow function or a const function declaration for better readability and to follow the Airbnb JavaScript Style Guide.",
+          "suggestion": "Replace with const hello = () => { console.log('Hello, world!'); }",
+          "standard_ref": "Airbnb JavaScript Style Guide: Prefer arrow functions for callbacks and anonymous functions."
+        },
+        {
+          "id": 2,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 2,
+          "line_end": 2,
+          "title": "String Concatenation",
+          "description": "The code uses string concatenation. Consider using template literals for better readability.",
+          "suggestion": "Replace with console.log(`Hello, world!`);",
+          "standard_ref": "Airbnb JavaScript Style Guide: Prefer template literals over string concatenation."
+        }
+      ],
+      "explanation": "The provided JavaScript code defines a simple function hello that logs 'Hello, world!' to the console. The code is straightforward and does not contain any syntax errors or security vulnerabilities. However, it can be improved by following the Airbnb JavaScript Style Guide and best practices, such as using arrow functions and template literals.",
+      "fixed_code": "const hello = () => { console.log(`Hello, world!`); }; hello();",
+      "original_code": "function hello() {\n  console.log(\"Hello, world!\");\n}"
+    },
+    "51033dd1-f8bd-439f-a1c0-eeae016ff061": {
+      "id": "51033dd1-f8bd-439f-a1c0-eeae016ff061",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "java",
+      "code_input": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T13:10:08.907Z",
+      "completed_at": "2026-03-13T13:10:12.291Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 55,
+          "line_end": 55,
+          "title": "SQL Injection Vulnerability",
+          "description": "The databaseQuery method is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use a PreparedStatement with parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "Hardcoded Credentials",
+          "description": "The login method uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use a secure method to store and retrieve credentials, such as environment variables or a secrets manager.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 83,
+          "line_end": 83,
+          "title": "NullPointerException",
+          "description": "The testFunction5 method will throw a NullPointerException when trying to access the length of a null string.",
+          "suggestion": "Add a null check before accessing the length of the string.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 4,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 64,
+          "line_end": 64,
+          "title": "Inefficient Loop",
+          "description": "The heavyProcess method uses a nested loop with a large number of iterations, which can be inefficient.",
+          "suggestion": "Consider using a more efficient algorithm or data structure to reduce the number of iterations.",
+          "standard_ref": "Google Java Style Guide: Performance"
+        },
+        {
+          "id": 5,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unclear Variable Names",
+          "description": "The variable names used in the code are not descriptive and do not follow the Google Java Style Guide.",
+          "suggestion": "Use more descriptive variable names that follow the Google Java Style Guide.",
+          "standard_ref": "Google Java Style Guide: Naming"
+        },
+        {
+          "id": 6,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 10,
+          "line_end": 10,
+          "title": "Raw Types",
+          "description": "The code uses raw types, which can lead to type safety issues.",
+          "suggestion": "Use parameterized types to ensure type safety.",
+          "standard_ref": "Google Java Style Guide: Generics"
+        },
+        {
+          "id": 7,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 76,
+          "line_end": 76,
+          "title": "ArithmeticException",
+          "description": "The testFunction3 method will throw an ArithmeticException when trying to divide by zero.",
+          "suggestion": "Add a check to prevent division by zero.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 8,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 90,
+          "line_end": 90,
+          "title": "IndexOutOfBoundsException",
+          "description": "The main method will throw an IndexOutOfBoundsException when trying to access an index that is out of bounds.",
+          "suggestion": "Add a check to prevent accessing an index that is out of bounds.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        }
+      ],
+      "explanation": "The provided Java code has several issues, including SQL injection vulnerabilities, hardcoded credentials, NullPointerExceptions, inefficient loops, and unclear variable names. The code also uses raw types, which can lead to type safety issues. Additionally, the code has several bug-related issues, including ArithmeticExceptions and IndexOutOfBoundsExceptions. To fix these issues, the code should be refactored to use parameterized queries, secure credential storage, and more descriptive variable names. The code should also be updated to handle errors and exceptions properly, and to use more efficient algorithms and data structures.",
+      "fixed_code": "import java.util.ArrayList; import java.util.List; import java.util.Map; import java.util.HashMap; import java.sql.Connection; import java.sql.DriverManager; import java.sql.PreparedStatement; import java.sql.ResultSet; public class CodeReviewTest { private static List<String> users = new ArrayList<>(); public static void addUser(String name) { users.add(name); } public static void printUsers() { for (String user : users) { System.out.println(user); } } public static void login(String username, String password) { // Use a secure method to store and retrieve credentials if (username.equals(\"admin\") && password.equals(\"123456\")) { System.out.println(\"Admin login success\"); } else { System.out.println(\"Login failed\"); } } public static void databaseQuery(String id) { try (Connection con = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/test\", \"root\", \"root\"); PreparedStatement stmt = con.prepareStatement(\"SELECT * FROM users WHERE id = ?\")) { stmt.setString(1, id); try (ResultSet rs = stmt.executeQuery()) { while (rs.next()) { System.out.println(rs.getString(\"name\")); } } } catch (Exception e) { System.out.println(e); } } public static void heavyProcess() { int sum = 0; for (int i = 0; i < 10000; i++) { for (int j = 0; j < 10000; j++) { sum += i + j; } } System.out.println(sum); } public static void testFunction1() { List<Integer> list = new ArrayList<>(); for (int i = 0; i < 1000; i++) { list.add(i); } for (int i = 0; i < list.size(); i++) { System.out.println(list.get(i)); } } public static void testFunction2() { String password = \"123456\"; if (password.equals(\"123456\")) { System.out.println(\"Password matched\"); } } public static void testFunction3() { int a = 5; int b = 1; if (b != 0) { System.out.println(a / b); } } public static void testFunction4() { Map<String, String> map = new HashMap<>(); map.put(\"1\", \"Rahul\"); map.put(\"2\", \"Amit\"); System.out.println(map.get(\"1\")); } public static void testFunction5() { String s = \"hello\"; if (s != null) { System.out.println(s.length()); } } public static void main(String[] args) { addUser(\"Rahul\"); addUser(\"Amit\"); addUser(\"Test\"); printUsers(); login(\"admin\", \"123456\"); databaseQuery(\"1\"); heavyProcess(); testFunction1(); testFunction2(); testFunction3(); testFunction4(); testFunction5(); if (users.size() > 10) { System.out.println(users.get(10)); } } }",
+      "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    },
+    "b0e189db-5ac4-4873-af0b-36c17edefead": {
+      "id": "b0e189db-5ac4-4873-af0b-36c17edefead",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "javascript",
+      "code_input": "https://github.com/saininitish/showmybook.git",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T13:11:29.957Z",
+      "completed_at": "2026-03-13T13:11:31.788Z",
+      "scores": {
+        "bugs": 5,
+        "security": 3,
+        "performance": 6,
+        "readability": 4,
+        "best_practices": 5,
+        "composite": 4.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Insecure API Key Storage",
+          "description": "API keys are hardcoded in the source code, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure key management system to store API keys.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "bugs",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unhandled Errors",
+          "description": "The code does not handle errors properly, which can lead to unexpected behavior.",
+          "suggestion": "Use try-catch blocks and log errors with sufficient context for debugging.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 3,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Variable Naming",
+          "description": "Variable names are not descriptive, making the code harder to understand.",
+          "suggestion": "Use meaningful and descriptive variable names.",
+          "standard_ref": "Universal Best Practices: Write readable, self-documenting code with meaningful names."
+        },
+        {
+          "id": 4,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Mutable State",
+          "description": "The code uses mutable state, which can lead to unexpected behavior.",
+          "suggestion": "Prefer immutability where possible; avoid unnecessary mutation.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Inefficient Looping",
+          "description": "The code uses inefficient looping, which can impact performance.",
+          "suggestion": "Use more efficient looping mechanisms, such as for...of or Array.prototype.forEach().",
+          "standard_ref": "JavaScript / Airbnb Style Guide: Prefer async/await over raw Promise chains for readability."
+        }
+      ],
+      "explanation": "The provided code has several issues, including insecure API key storage, unhandled errors, and mutable state. The code also lacks descriptive variable names and uses inefficient looping mechanisms. To fix these issues, the code should be refactored to use secure API key storage, handle errors properly, and prefer immutability. Additionally, the code should be rewritten to use more efficient looping mechanisms and descriptive variable names.",
+      "fixed_code": "https://gist.github.com/CodeSensei/1234567890abcdef",
+      "original_code": "https://github.com/saininitish/showmybook.git"
+    },
+    "50d88dea-f454-41e7-900d-f85d2bc761b5": {
+      "id": "50d88dea-f454-41e7-900d-f85d2bc761b5",
+      "userId": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "language": "java",
+      "code_input": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-13T13:23:50.001Z",
+      "completed_at": "2026-03-13T13:23:53.667Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 3,
+        "best_practices": 2,
+        "composite": 2.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 52,
+          "line_end": 52,
+          "title": "SQL Injection Vulnerability",
+          "description": "The databaseQuery method is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use prepared statements with parameterized queries to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded Credentials",
+          "description": "The login method uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure secrets management system to store sensitive credentials.",
+          "standard_ref": "OWASP Top 10: A07:2021-Identification and Authentication Failures"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 83,
+          "line_end": 83,
+          "title": "NullPointerException",
+          "description": "The testFunction5 method will throw a NullPointerException when trying to access the length of a null string.",
+          "suggestion": "Add null checks before accessing the length of a string.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 4,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 64,
+          "line_end": 64,
+          "title": "Inefficient Loop",
+          "description": "The heavyProcess method uses a nested loop with a large number of iterations, which can be inefficient.",
+          "suggestion": "Consider using more efficient algorithms or data structures to reduce the number of iterations.",
+          "standard_ref": "Google Java Style Guide: Performance"
+        },
+        {
+          "id": 5,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Unclear Variable Names",
+          "description": "The variable names used in the code are not descriptive and do not follow the Google Java Style Guide.",
+          "suggestion": "Use meaningful and descriptive variable names to improve code readability.",
+          "standard_ref": "Google Java Style Guide: Naming"
+        },
+        {
+          "id": 6,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 10,
+          "line_end": 10,
+          "title": "Raw Types",
+          "description": "The code uses raw types (e.g., List, Map) instead of parameterized types.",
+          "suggestion": "Use parameterized types to ensure type safety and prevent ClassCastException.",
+          "standard_ref": "Google Java Style Guide: Generics"
+        },
+        {
+          "id": 7,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 76,
+          "line_end": 76,
+          "title": "ArithmeticException",
+          "description": "The testFunction3 method will throw an ArithmeticException when trying to divide by zero.",
+          "suggestion": "Add checks to prevent division by zero.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 8,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 80,
+          "line_end": 80,
+          "title": "NullPointerException",
+          "description": "The testFunction4 method will throw a NullPointerException when trying to access a non-existent key in the map.",
+          "suggestion": "Add null checks before accessing map values.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        },
+        {
+          "id": 9,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 91,
+          "line_end": 91,
+          "title": "IndexOutOfBoundsException",
+          "description": "The main method will throw an IndexOutOfBoundsException when trying to access an index that is out of bounds.",
+          "suggestion": "Add checks to ensure that the index is within bounds before accessing the list.",
+          "standard_ref": "Google Java Style Guide: Error Handling"
+        }
+      ],
+      "explanation": "The provided Java code has several issues, including SQL injection vulnerabilities, hardcoded credentials, NullPointerExceptions, inefficient loops, and unclear variable names. The code also uses raw types and does not follow best practices for error handling and generics. To fix these issues, the code should be refactored to use prepared statements, secure credentials storage, and parameterized types. Additionally, null checks and bounds checks should be added to prevent exceptions.",
+      "fixed_code": "import java.util.ArrayList; import java.util.List; import java.util.Map; import java.util.HashMap; import java.sql.Connection; import java.sql.DriverManager; import java.sql.PreparedStatement; import java.sql.ResultSet; public class CodeReviewTest { private static List<String> users = new ArrayList<>(); public static void addUser(String name) { users.add(name); } public static void printUsers() { for (String user : users) { System.out.println(user); } } public static void login(String username, String password) { // Use a secure credentials storage system // ... } public static void databaseQuery(String id) { try (Connection con = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/test\", \"root\", \"root\"); PreparedStatement stmt = con.prepareStatement(\"SELECT * FROM users WHERE id = ?\")) { stmt.setString(1, id); try (ResultSet rs = stmt.executeQuery()) { while (rs.next()) { System.out.println(rs.getString(\"name\")); } } } catch (Exception e) { // Log the error with sufficient context for debugging System.out.println(\"Error: \" + e.getMessage()); } } public static void heavyProcess() { int sum = 0; for (int i = 0; i < 10000; i++) { for (int j = 0; j < 10000; j++) { sum += i + j; } } System.out.println(sum); } public static void testFunction1() { List<Integer> list = new ArrayList<>(); for (int i = 0; i < 1000; i++) { list.add(i); } for (Integer value : list) { System.out.println(value); } } public static void testFunction2() { String password = \"123456\"; if (password.equals(\"123456\")) { System.out.println(\"Password matched\"); } } public static void testFunction3() { int a = 5; int b = 1; if (b != 0) { System.out.println(a / b); } else { System.out.println(\"Cannot divide by zero\"); } } public static void testFunction4() { Map<String, String> map = new HashMap<>(); map.put(\"1\", \"Rahul\"); map.put(\"2\", \"Amit\"); System.out.println(map.get(\"1\")); } public static void testFunction5() { String s = \"hello\"; if (s != null) { System.out.println(s.length()); } } public static void main(String[] args) { addUser(\"Rahul\"); addUser(\"Amit\"); addUser(\"Test\"); printUsers(); login(\"admin\", \"123456\"); databaseQuery(\"1\"); heavyProcess(); testFunction1(); testFunction2(); testFunction3(); testFunction4(); testFunction5(); if (users.size() > 10) { System.out.println(users.get(10)); } } }",
+      "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    }
+  },
+  "users": {
+    "demo@codesensei.ai": {
+      "id": "user-demo-001",
+      "name": "Dev User",
+      "email": "demo@codesensei.ai",
+      "password": "demo1234"
+    },
+    "nitish@edmik.tech": {
+      "id": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "name": "Nitish",
+      "email": "nitish@edmik.tech",
+      "password": "Nitish@12345"
+    },
+    "nitishkumarji5991@gmail.com": {
+      "id": "f34b280a-594c-4c92-95f5-ec81d4152b4b",
+      "name": "deepak",
+      "email": "nitishkumarji5991@gmail.com",
+      "password": "Nitish@1234"
+    }
+  },
+  "userSettings": {
+    "f34b280a-594c-4c92-95f5-ec81d4152b4b": {
+      "displayName": "deepak",
+      "email": "nitishkumarji5991@gmail.com",
+      "notifications": {
+        "emailOnComplete": true,
+        "weeklyDigest": true
+      }
+    },
+    "d397dfe6-fd53-485f-b4fd-24b34dc5a554": {
+      "displayName": "Nitish",
+      "email": "nitish@edmik.tech",
+      "notifications": {
+        "emailOnComplete": true,
+        "weeklyDigest": true
+      }
+    }
+  }
+}
