@@ -85,16 +85,17 @@ Developers — especially those early in their careers or working independently 
 
 *Acceptance Criteria:*
 - ✅ User can register with name + email + password
-- ✅ Validation: duplicate email blocked, password min 6 chars, real-time password strength indicator
+- ✅ Validation: duplicate email blocked, password min 6 characters
 - ✅ On successful signup, user is auto-logged in and directed to Dashboard
-- ✅ Account data persisted in `data.json` (survives server restarts)
+- ✅ Account data persisted in **Supabase** (survives server restarts)
 - ⬜ Email verification via Resend *(post-MVP)*
 - ⬜ Onboarding screen explaining 5 review dimensions *(post-MVP)*
 
 *Implementation Notes:*
-- Frontend: `SignupView` component in `App.jsx` with form validation
-- Backend: `POST /v1/auth/signup` in `server.js`
-- Session stored in `localStorage` via `authStorage` helper in `api.js`
+- Frontend: `SignupView` component in `frontend/src/components/auth`
+- Backend: `POST /v1/auth/signup` using Supabase client
+- Session stored in `localStorage` via `authStorage` helper
+- **New Feature**: Chrome-style user chooser allows switching between multiple saved accounts on the same device.
 
 ---
 
@@ -105,11 +106,12 @@ Developers — especially those early in their careers or working independently 
 - ✅ Login with email + password, session persists via `localStorage`
 - ✅ User is redirected to Dashboard on successful login
 - ✅ Logout button available in Sidebar
-- ✅ Review history persists between login sessions (file-based storage)
+- ✅ Review history persists in **Supabase**
+- ✅ **New Feature**: "Saved Accounts" screen for quick switching between dev profiles.
 - ⬜ JWT expiry / 7-day session timeout *(post-MVP)*
 
 *Implementation Notes:*
-- Frontend: `LoginView` component in `App.jsx` with show/hide password toggle
+- Frontend: `LoginView` and `UserChooser` components
 - Backend: `POST /v1/auth/login` in `server.js`
 - Demo account pre-seeded: `demo@codesensei.ai` / `demo1234`
 
@@ -117,67 +119,91 @@ Developers — especially those early in their careers or working independently 
 
 ### Core Review Flow
 
-**US-03 — Submit Code for Review**
+**US-03 — Submit Code for Review** ✅ *Implemented*
 > As a developer, I want to paste my code or provide a GitHub raw file URL so that I can receive an AI-powered review without setting up any tools locally.
 
 *Acceptance Criteria:*
-- Text area accepts pasted code up to 500 lines (MVP)
-- GitHub raw URL input fetches the file and populates the code area
-- User selects the programming language (JavaScript, Python, TypeScript)
-- Review is submitted with a single click
+- ✅ Text area accepts pasted code for instant review
+- ✅ **GitHub Repo Browser**: User can load their entire file tree and select a specific file
+- ✅ Automatic language detection from code content (RegEx-based)
+- ✅ User can manually select from supported languages
+- ✅ Review is submitted with a single click
 
 ---
 
-**US-04 — Receive Scored Review**
+**US-04 — Receive Scored Review** ✅ *Implemented*
 > As a developer, I want to receive a structured review with a score (1–10) for each of the 5 dimensions so that I can quickly understand where my code is strong and where it needs work.
 
 *Acceptance Criteria:*
-- Review displays 5 dimension scores: Bugs, Security, Performance, Readability, Best Practices
-- Each dimension shows individual findings with line number references
-- Each finding includes: severity (low/medium/high), description, and recommended fix
-- A composite score (average of 5 dimensions) is displayed prominently
+- ✅ Review displays 5 dimension scores: Bugs, Security, Performance, Readability, Best Practices
+- ✅ Each dimension shows individual findings with line number references
+- ✅ Each finding includes: severity (low/medium/high/critical), description, and recommended fix
+- ✅ A composite score (average of 5 dimensions) is displayed prominently
 
 ---
 
-**US-05 — Apply Fix Mode**
+**US-05 — Apply Fix Mode** ✅ *Implemented*
 > As a developer, I want to see a rewritten version of my code with all AI-suggested fixes applied so that I can understand what the corrected code looks like without manually applying each change.
 
 *Acceptance Criteria:*
-- "Apply Fix Mode" button is available on every completed review
-- Fixed code is displayed in a syntax-highlighted diff view (original vs. fixed)
-- User can copy the fixed code to clipboard in one click
+- ✅ "Apply Fix Mode" button is available on every completed review
+- ✅ Fixed code is displayed in a syntax-highlighted editor view
+- ✅ User can copy the fixed code to clipboard in one click
 
 ---
 
-**US-06 — Read Code Explanation**
+**US-06 — Read Code Explanation** ✅ *Implemented*
 > As a developer learning a new language or pattern, I want a plain-English explanation of what my code does so that I can validate my understanding and learn from the review.
 
 *Acceptance Criteria:*
-- "Explain This Code" section is included in every review result
-- Explanation is written at an accessible level (no assumed deep expertise)
-- Explanation references the specific logic, patterns, and any notable constructs in the submitted code
+- ✅ "Explain This Code" section is included in every review result
+- ✅ Explanation is written at an accessible level (no assumed deep expertise)
+- ✅ Explanation references the specific logic, patterns, and any notable constructs in the submitted code
+
+---
+
+**US-11 — Share Review via Email** ✅ *Implemented* (New)
+> As a developer, I want to share my review results with a colleague or mentor so that I can get their input or show my progress.
+
+*Acceptance Criteria:*
+- ✅ "Share Report" button in Review History
+- ✅ User can enter recipient email and their own name
+- ✅ Report is sent via Resend API with a structured summary
+
+---
+
+**US-12 — Browse GitHub Repositories** ✅ *Implemented* (New)
+> As a developer, I want to browse my GitHub repository's file structure so that I can easily select specific files for review without finding raw URLs manually.
+
+*Acceptance Criteria:*
+- ✅ Robust parsing of GitHub repository URLs
+- ✅ Modal browser showing file/folder tree
+- ✅ Searchable file list within the repository
+- ✅ One-click file selection and loading
 
 ---
 
 ### History & Progress
 
-**US-07 — View Review History**
+**US-07 — View Review History** ✅ *Implemented*
 > As a developer, I want to see a list of all my past reviews so that I can revisit feedback and track what I've been working on.
 
 *Acceptance Criteria:*
-- Review history page lists all past submissions with: date, language, composite score, and snippet preview
-- User can click any past review to open the full results
-- Reviews are paginated (10 per page)
+- ✅ Review history page lists all past submissions with: date, language, composite score, and source
+- ✅ User can rename or delete individual reviews
+- ✅ User can click any past review to open the full results
+- ✅ Reviews are sorted by date (newest first)
 
 ---
 
-**US-08 — Track Progress on Dashboard**
+**US-08 — Track Progress on Dashboard** ✅ *Implemented*
 > As a developer, I want to see a dashboard showing how my code scores have changed over time so that I can measure my improvement and stay motivated.
 
 *Acceptance Criteria:*
-- Dashboard displays a line chart of composite scores over time
-- Radar chart showing average scores per dimension (to identify consistent weaknesses)
-- "Total Reviews Submitted" and "Average Score This Month" KPI cards displayed
+- ✅ Dashboard displays total review count and average composite score
+- ✅ Radar chart showing average scores per dimension from real user data
+- ✅ KPI cards for "Most Improved" and "Weakest" dimensions
+- ✅ Recent reviews quick-access table
 
 ---
 
@@ -206,25 +232,26 @@ Developers — especially those early in their careers or working independently 
 ## 4. MVP Feature List
 
 ### Must Have (Launch)
-- [x] User authentication — **Sign Up** (`POST /v1/auth/signup`)
-- [x] User authentication — **Login** (`POST /v1/auth/login`) 
-- [x] User authentication — **Logout** (sidebar button + localStorage clear)
-- [x] Session persistence via `localStorage` (survives page refresh)
-- [x] Review history persistence via `data.json` (survives server restart)
-- [ ] Code submission via paste or GitHub raw URL
-- [ ] AI code review across 5 dimensions with scores (1–10)
-- [ ] Per-finding details with line number references and severity
-- [ ] Fix Mode: AI-rewritten code with diff view
-- [ ] Code explanation section
-- [ ] Review history (list + detail view)
-- [ ] Progress dashboard (score over time, per-dimension radar chart)
-- [ ] RAG pipeline grounded in Airbnb JS, PEP8, and OWASP Top 10
-- [ ] Email notification on review completion (Resend)
+- [x] User authentication — **Sign Up** (Supabase persistence)
+- [x] User authentication — **Login** (Supabase persistence)
+- [x] User authentication — **Logout** (Sidebar button + clearing LocalStorage)
+- [x] Session persistence + **Multi-Account Switcher** (Chrome-style)
+- [x] Review history persistence via **Supabase**
+- [x] Code submission via **GitHub Repo Browser** or manual paste
+- [x] AI code review across 5 dimensions with scores (1.0–10.0)
+- [x] Per-finding details with line reference, severity, and suggested fix
+- [x] **Fix Mode**: Full AI-rewritten code view with copy-to-clipboard
+- [x] **Code Explanation**: Natural language summary of code logic
+- [x] Review history (List view + detail access + rename/delete)
+- [x] Progress Dashboard (Radar chart + longitudinal stats)
+- [x] RAG pipeline (Grounding in language-specific style guides)
+- [x] **Email Sharing** (Resend API integration)
+- [x] User Settings: Profile management and **Account Deletion**
 
 ### Should Have (Post-Launch Sprint 1)
-- [ ] Support for TypeScript and Python (in addition to JavaScript at launch)
-- [ ] Weekly progress digest email
-- [ ] Shareable review links (public permalink)
+- [x] Support for 10+ languages (JS, TS, Python, Java, Go, Rust, C++, PHP, Kotlin)
+- [ ] Weekly progress digest email (automated worker)
+- [ ] Shareable review links (public permalink) - *Partially implemented via email share*
 - [ ] Review comment/annotation by the user
 
 ### Nice to Have (Backlog)
@@ -242,7 +269,6 @@ The following are explicitly **not** in scope for the MVP release:
 
 - Real-time collaborative code editing
 - In-browser code execution or sandboxed runtime
-- Support for languages beyond JavaScript, TypeScript, and Python
 - CI/CD pipeline integrations (GitHub Actions, GitLab CI)
 - Team management, org-level billing, or SSO
 - Mobile native application (iOS/Android)

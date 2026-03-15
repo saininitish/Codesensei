@@ -4,77 +4,16 @@ import dotenv from 'dotenv';
 import { performCodeReview } from './services/reviewService.js';
 import { getRelevantCodingStandards } from './services/ragService.js';
 import { sendCompletionEmail, shareReportEmail } from './services/emailService.js';
+import { supabase } from './services/supabaseClient.js';
 import crypto from 'crypto';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DATA_FILE = path.join(__dirname, '../../data.json');
 
-// ─── Persistent JSON Store ───────────────────────────────────────────────────
-
-function loadData() {
-  try {
-    if (fs.existsSync(DATA_FILE)) {
-      const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-      const parsed = JSON.parse(raw);
-      return {
-        reviews:      new Map(Object.entries(parsed.reviews      || {})),
-        users:        new Map(Object.entries(parsed.users        || {})),
-        userSettings: new Map(Object.entries(parsed.userSettings || {})),
-      };
-    }
-  } catch (e) {
-    console.warn('Could not load data.json, starting fresh:', e.message);
-  }
-  return {
-    reviews:      new Map(),
-    users:        new Map(),
-    userSettings: new Map(),
-  };
-}
-
-function saveData() {
-  try {
-    const payload = {
-      reviews:      Object.fromEntries(db.reviews),
-      users:        Object.fromEntries(db.users),
-      userSettings: Object.fromEntries(db.userSettings),
-    };
-    fs.writeFileSync(DATA_FILE, JSON.stringify(payload, null, 2), 'utf-8');
-  } catch (e) {
-    console.error('Failed to save data.json:', e.message);
-  }
-}
-
-const db = loadData();
-
-// Seed a demo user if not already present
-if (!db.users.has('demo@codesensei.ai')) {
-  db.users.set('demo@codesensei.ai', {
-    id: 'user-demo-001',
-    name: 'Dev User',
-    email: 'demo@codesensei.ai',
-    password: 'demo1234'
-  });
-  saveData();
-}
-
-// Helper: get settings for a user (creates default if not exists)
-function getUserSettings(userId) {
-  if (!db.userSettings.has(userId)) {
-    const user = Array.from(db.users.values()).find(u => u.id === userId);
-    db.userSettings.set(userId, {
-      displayName: user?.name || 'Dev User',
-      email: user?.email || '',
-      notifications: { emailOnComplete: false, weeklyDigest: false }
-    });
-  }
-  return db.userSettings.get(userId);
-}
+// ─────────────────────────────────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────────────────────────────────
 
@@ -86,7 +25,7 @@ app.use(express.json());
 
 // ─── Auth Routes ────────────────────────────────────────────────────────────
 
-app.post('/v1/auth/signup', (req, res) => {
+app.post('/v1/auth/signup', async (req, res) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password)
@@ -95,30 +34,43 @@ app.post('/v1/auth/signup', (req, res) => {
     return res.status(400).json({ error: 'Invalid email address.' });
   if (password.length < 6)
     return res.status(400).json({ error: 'Password must be at least 6 characters.' });
-  if (db.users.has(email))
+
+  // Check if user already exists
+  const { data: existingUser } = await supabase
+    .from('profiles')
+    .select('email')
+    .eq('email', email)
+    .single();
+
+  if (existingUser)
     return res.status(409).json({ error: 'An account with this email already exists.' });
 
   const userId = crypto.randomUUID();
   const user = { id: userId, name, email, password };
-  db.users.set(email, user);
 
-  // Also update the main userItem so Settings shows the new user
-  db.userItem.displayName = name;
-  db.userItem.email = email;
-  saveData();
+  const { error } = await supabase
+    .from('profiles')
+    .insert([user]);
+
+  if (error) return res.status(500).json({ error: 'Failed to create account.' });
 
   const { password: _pw, ...safeUser } = user;
   return res.status(201).json({ user: safeUser, message: 'Account created successfully!' });
 });
 
-app.post('/v1/auth/login', (req, res) => {
+app.post('/v1/auth/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password)
     return res.status(400).json({ error: 'Email and password are required.' });
 
-  const user = db.users.get(email);
-  if (!user || user.password !== password)
+  const { data: user, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('email', email)
+    .single();
+
+  if (error || !user || user.password !== password)
     return res.status(401).json({ error: 'Invalid email or password.' });
 
   const { password: _pw, ...safeUser } = user;
@@ -127,11 +79,15 @@ app.post('/v1/auth/login', (req, res) => {
 
 // ─── API Routes ───────────────────────────────────────────────────────────────
 
-app.get('/v1/dashboard/stats', (req, res) => {
+app.get('/v1/dashboard/stats', async (req, res) => {
   const { userId } = req.query;
-  let reviews = Array.from(db.reviews.values());
-  // Filter by userId if provided
-  if (userId) reviews = reviews.filter(r => r.userId === userId);
+  
+  let query = supabase.from('reviews').select('*');
+  if (userId) query = query.eq('user_id', userId);
+  
+  const { data: reviews, error } = await query;
+  if (error) return res.status(500).json({ error: 'Failed to fetch stats' });
+
   const completed = reviews.filter(r => r.status === 'completed');
 
   const avg = completed.length > 0
@@ -163,7 +119,7 @@ app.post('/v1/reviews', async (req, res) => {
   // Create pending review — linked to the submitting user
   const review = {
     id: review_id,
-    userId: userId || null,
+    user_id: userId || null,
     language: language || 'javascript',
     code_input: code_input || '',
     source_url,
@@ -173,8 +129,7 @@ app.post('/v1/reviews', async (req, res) => {
     created_at: new Date().toISOString()
   };
 
-  db.reviews.set(review_id, review);
-  saveData();
+  await supabase.from('reviews').insert([review]);
 
   res.status(202).json({ review_id, status: 'processing', estimated_seconds: 15 });
 
@@ -184,7 +139,6 @@ app.post('/v1/reviews', async (req, res) => {
     const result  = await performCodeReview(review.code_input, review.language, context);
 
     const updatedReview = {
-      ...review,
       status: 'completed',
       completed_at: new Date().toISOString(),
       scores: result.scores,
@@ -193,63 +147,71 @@ app.post('/v1/reviews', async (req, res) => {
       fixed_code: result.fixed_code,
       original_code: review.code_input,
     };
-    db.reviews.set(review_id, updatedReview);
-    saveData();
+    
+    await supabase.from('reviews').update(updatedReview).eq('id', review_id);
 
-    // Send email notification if user has it enabled
-    const userSettings = userId ? db.userSettings.get(userId) : null;
-    const notifyEmail = email ||
-      (userSettings?.notifications?.emailOnComplete ? userSettings.email : null);
-    // Automatic email sharing disabled as per user request (Manual trigger added to History)
+    // Email notification logic can be added here if needed
   } catch (err) {
     console.error(`Error processing review ${review_id}:`, err);
-    db.reviews.set(review_id, { ...review, status: 'failed' });
-    saveData();
+    await supabase.from('reviews').update({ status: 'failed' }).eq('id', review_id);
   }
 });
 
-app.get('/v1/reviews', (req, res) => {
+app.get('/v1/reviews', async (req, res) => {
   const { userId } = req.query;
-  let reviews = Array.from(db.reviews.values());
-  // Only return reviews that belong to this user
-  if (userId) reviews = reviews.filter(r => r.userId === userId);
-  reviews.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+  let query = supabase.from('reviews').select('*').order('created_at', { ascending: false });
+  if (userId) query = query.eq('user_id', userId);
+
+  const { data: reviews, error } = await query;
+  if (error) return res.status(500).json({ error: 'Failed to fetch reviews' });
   res.json({ reviews });
 });
 
-app.get('/v1/reviews/:id', (req, res) => {
-  const review = db.reviews.get(req.params.id);
-  if (!review) return res.status(404).json({ error: 'Review not found' });
+app.get('/v1/reviews/:id', async (req, res) => {
+  const { data: review, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('id', req.params.id)
+    .single();
+    
+  if (error || !review) return res.status(404).json({ error: 'Review not found' });
   res.json(review);
 });
 
-app.patch('/v1/reviews/:id', (req, res) => {
+app.patch('/v1/reviews/:id', async (req, res) => {
   const { id } = req.params;
   const { name } = req.body;
-  const review = db.reviews.get(id);
-  if (!review) return res.status(404).json({ error: 'Review not found' });
   
-  const updated = { ...review, name: name || review.name };
-  db.reviews.set(id, updated);
-  saveData();
+  const { data: updated, error } = await supabase
+    .from('reviews')
+    .update({ name })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) return res.status(404).json({ error: 'Review not found or update failed' });
   res.json(updated);
 });
 
-app.delete('/v1/reviews/:id', (req, res) => {
+app.delete('/v1/reviews/:id', async (req, res) => {
   const { id } = req.params;
-  if (!db.reviews.has(id)) return res.status(404).json({ error: 'Review not found' });
+  const { error } = await supabase.from('reviews').delete().eq('id', id);
   
-  db.reviews.delete(id);
-  saveData();
+  if (error) return res.status(404).json({ error: 'Review not found' });
   res.json({ success: true });
 });
 
 app.post('/v1/reviews/:id/share', async (req, res) => {
   const { id } = req.params;
   const { email, userName } = req.body;
-  const review = db.reviews.get(id);
   
-  if (!review) return res.status(404).json({ error: 'Review not found' });
+  const { data: review, error } = await supabase
+    .from('reviews')
+    .select('*')
+    .eq('id', id)
+    .single();
+  
+  if (error || !review) return res.status(404).json({ error: 'Review not found' });
   if (!email) return res.status(400).json({ error: 'Recipient email is required' });
 
   const success = await shareReportEmail(email, review, userName);
@@ -260,57 +222,60 @@ app.post('/v1/reviews/:id/share', async (req, res) => {
   }
 });
 
-app.get('/v1/user/settings', (req, res) => {
+app.get('/v1/user/settings', async (req, res) => {
   const { userId } = req.query;
-  res.json(getUserSettings(userId));
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('name, email, notifications')
+    .eq('id', userId)
+    .single();
+    
+  res.json({
+    displayName: profile?.name || 'Dev User',
+    email: profile?.email || '',
+    notifications: profile?.notifications || { emailOnComplete: false, weeklyDigest: false }
+  });
 });
 
-app.post('/v1/user/settings', (req, res) => {
+app.post('/v1/user/settings', async (req, res) => {
   const { userId, displayName, email, password, notifications } = req.body;
-  const settings = getUserSettings(userId);
   
-  if (displayName  !== undefined) settings.displayName = displayName;
-  if (email        !== undefined) {
-    settings.email = email;
-    // Update main user record too
-    const user = Array.from(db.users.values()).find(u => u.id === userId);
-    if (user) {
-      db.users.delete(user.email);
-      user.email = email;
-      user.name = displayName || user.name;
-      if (password) user.password = password;
-      db.users.set(email, user);
-    }
-  } else if (password) {
-    const user = Array.from(db.users.values()).find(u => u.id === userId);
-    if (user) user.password = password;
-  }
+  const updates = {};
+  if (displayName !== undefined) updates.name = displayName;
+  if (email !== undefined) updates.email = email;
+  if (password !== undefined) updates.password = password;
+  if (notifications !== undefined) updates.notifications = notifications;
 
-  if (notifications !== undefined) settings.notifications = { ...settings.notifications, ...notifications };
-  if (userId) db.userSettings.set(userId, settings);
-  saveData();
-  res.json({ success: true, settings });
+  const { data: settings, error } = await supabase
+    .from('profiles')
+    .update(updates)
+    .eq('id', userId)
+    .select()
+    .single();
+
+  if (error) return res.status(500).json({ error: 'Failed to update settings' });
+  
+  res.json({ 
+    success: true, 
+    settings: {
+      displayName: settings.name,
+      email: settings.email,
+      notifications: settings.notifications
+    } 
+  });
 });
 
-app.delete('/v1/user/account', (req, res) => {
+app.delete('/v1/user/account', async (req, res) => {
   const { userId } = req.body;
   if (!userId) return res.status(400).json({ error: 'User ID is required' });
 
-  // 1. Remove user from users map
-  const user = Array.from(db.users.values()).find(u => u.id === userId);
-  if (user) db.users.delete(user.email);
+  // 1. Remove all reviews
+  await supabase.from('reviews').delete().eq('user_id', userId);
 
-  // 2. Remove user settings
-  db.userSettings.delete(userId);
+  // 2. Remove profile
+  const { error } = await supabase.from('profiles').delete().eq('id', userId);
 
-  // 3. Remove all reviews
-  const reviewIds = Array.from(db.reviews.entries())
-    .filter(([_, r]) => r.userId === userId)
-    .map(([id, _]) => id);
-  
-  reviewIds.forEach(id => db.reviews.delete(id));
-
-  saveData();
+  if (error) return res.status(500).json({ error: 'Failed to delete account' });
   res.json({ success: true, message: 'Account and all data deleted' });
 });
 
