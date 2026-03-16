@@ -87,13 +87,13 @@ Developers — especially those early in their careers or working independently 
 - ✅ User can register with name + email + password
 - ✅ Validation: duplicate email blocked, password min 6 characters
 - ✅ On successful signup, user is auto-logged in and directed to Dashboard
-- ✅ Account data persisted in **Supabase** (survives server restarts)
+- ✅ Account data persisted in **data.json** (survives server restarts)
 - ⬜ Email verification via Resend *(post-MVP)*
 - ⬜ Onboarding screen explaining 5 review dimensions *(post-MVP)*
 
 *Implementation Notes:*
 - Frontend: `SignupView` component in `frontend/src/components/auth`
-- Backend: `POST /v1/auth/signup` using Supabase client
+- Backend: `POST /v1/auth/signup` handling local JSON storage
 - Session stored in `localStorage` via `authStorage` helper
 - **New Feature**: Chrome-style user chooser allows switching between multiple saved accounts on the same device.
 
@@ -106,7 +106,7 @@ Developers — especially those early in their careers or working independently 
 - ✅ Login with email + password, session persists via `localStorage`
 - ✅ User is redirected to Dashboard on successful login
 - ✅ Logout button available in Sidebar
-- ✅ Review history persists in **Supabase**
+- ✅ Review history persists in **data.json**
 - ✅ **New Feature**: "Saved Accounts" screen for quick switching between dev profiles.
 - ⬜ JWT expiry / 7-day session timeout *(post-MVP)*
 
@@ -232,11 +232,11 @@ Developers — especially those early in their careers or working independently 
 ## 4. MVP Feature List
 
 ### Must Have (Launch)
-- [x] User authentication — **Sign Up** (Supabase persistence)
-- [x] User authentication — **Login** (Supabase persistence)
+- [x] User authentication — **Sign Up** (Local JSON persistence)
+- [x] User authentication — **Login** (Local JSON persistence)
 - [x] User authentication — **Logout** (Sidebar button + clearing LocalStorage)
 - [x] Session persistence + **Multi-Account Switcher** (Chrome-style)
-- [x] Review history persistence via **Supabase**
+- [x] Review history persistence via **data.json**
 - [x] Code submission via **GitHub Repo Browser** or manual paste
 - [x] AI code review across 5 dimensions with scores (1.0–10.0)
 - [x] Per-finding details with line reference, severity, and suggested fix
@@ -283,14 +283,14 @@ The MVP will be considered successful when all of the following are true within 
 
 | Criterion | Target | Measurement Method |
 |---|---|---|
-| User Acquisition | ≥ 500 registered users | Supabase auth records |
-| Review Volume | ≥ 2,000 reviews submitted | `reviews` table row count |
+| User Acquisition | ≥ 500 registered users | `users` list count |
+| Review Volume | ≥ 2,000 reviews submitted | `reviews` array length |
 | D7 Retention | ≥ 40% of users return within 7 days | Session analytics |
 | Score Improvement | Users improve avg score ≥15% over first 10 reviews | Dashboard query on `reviews` table |
 | User Satisfaction | ≥ 70% rate feedback "useful"/"very useful" | In-app post-review survey |
 | Review Latency | p95 latency < 10 seconds | Backend response time logs |
 | System Uptime | ≥ 99.5% | Vercel + uptime monitoring |
-| Fix Mode Adoption | ≥ 30% of reviews trigger Fix Mode | `fix_mode_used` boolean in `reviews` |
+| Fix Mode Adoption | ≥ 30% of reviews trigger Fix Mode | Custom analytics tracker |
 
 ---
 

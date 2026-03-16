@@ -1697,6 +1697,285 @@
       "explanation": "The provided Java code has several issues, including SQL injection vulnerabilities, hardcoded credentials, NullPointerExceptions, inefficient loops, and unclear variable names. The code also uses raw types and does not follow best practices for error handling and generics. To fix these issues, the code should be refactored to use prepared statements, secure credentials storage, and parameterized types. Additionally, null checks and bounds checks should be added to prevent exceptions.",
       "fixed_code": "import java.util.ArrayList; import java.util.List; import java.util.Map; import java.util.HashMap; import java.sql.Connection; import java.sql.DriverManager; import java.sql.PreparedStatement; import java.sql.ResultSet; public class CodeReviewTest { private static List<String> users = new ArrayList<>(); public static void addUser(String name) { users.add(name); } public static void printUsers() { for (String user : users) { System.out.println(user); } } public static void login(String username, String password) { // Use a secure credentials storage system // ... } public static void databaseQuery(String id) { try (Connection con = DriverManager.getConnection(\"jdbc:mysql://localhost:3306/test\", \"root\", \"root\"); PreparedStatement stmt = con.prepareStatement(\"SELECT * FROM users WHERE id = ?\")) { stmt.setString(1, id); try (ResultSet rs = stmt.executeQuery()) { while (rs.next()) { System.out.println(rs.getString(\"name\")); } } } catch (Exception e) { // Log the error with sufficient context for debugging System.out.println(\"Error: \" + e.getMessage()); } } public static void heavyProcess() { int sum = 0; for (int i = 0; i < 10000; i++) { for (int j = 0; j < 10000; j++) { sum += i + j; } } System.out.println(sum); } public static void testFunction1() { List<Integer> list = new ArrayList<>(); for (int i = 0; i < 1000; i++) { list.add(i); } for (Integer value : list) { System.out.println(value); } } public static void testFunction2() { String password = \"123456\"; if (password.equals(\"123456\")) { System.out.println(\"Password matched\"); } } public static void testFunction3() { int a = 5; int b = 1; if (b != 0) { System.out.println(a / b); } else { System.out.println(\"Cannot divide by zero\"); } } public static void testFunction4() { Map<String, String> map = new HashMap<>(); map.put(\"1\", \"Rahul\"); map.put(\"2\", \"Amit\"); System.out.println(map.get(\"1\")); } public static void testFunction5() { String s = \"hello\"; if (s != null) { System.out.println(s.length()); } } public static void main(String[] args) { addUser(\"Rahul\"); addUser(\"Amit\"); addUser(\"Test\"); printUsers(); login(\"admin\", \"123456\"); databaseQuery(\"1\"); heavyProcess(); testFunction1(); testFunction2(); testFunction3(); testFunction4(); testFunction5(); if (users.size() > 10) { System.out.println(users.get(10)); } } }",
       "original_code": "import java.util.*;\nimport java.sql.*;\n\npublic class CodeReviewTest {\n\n    static List users = new ArrayList();\n\n    public static void addUser(String name){\n        users.add(name);\n    }\n\n    public static void printUsers(){\n        for(int i=0;i<users.size();i++){\n            System.out.println(users.get(i));\n        }\n    }\n\n    public static void login(String username,String password){\n        if(username == \"admin\" && password == \"123456\"){\n            System.out.println(\"Admin login success\");\n        }else{\n            System.out.println(\"Login failed\");\n        }\n    }\n\n    public static void databaseQuery(String id){\n\n        try{\n\n            Connection con = DriverManager.getConnection(\n            \"jdbc:mysql://localhost:3306/test\",\"root\",\"root\");\n\n            Statement stmt = con.createStatement();\n\n            String query = \"SELECT * FROM users WHERE id = \" + id;\n\n            ResultSet rs = stmt.executeQuery(query);\n\n            while(rs.next()){\n                System.out.println(rs.getString(\"name\"));\n            }\n\n        }catch(Exception e){\n            System.out.println(e);\n        }\n    }\n\n    public static void heavyProcess(){\n\n        int sum = 0;\n\n        for(int i=0;i<10000;i++){\n            for(int j=0;j<10000;j++){\n                sum = sum + i + j;\n            }\n        }\n\n        System.out.println(sum);\n    }\n\n    public static void testFunction1(){\n        List list = new ArrayList();\n        for(int i=0;i<1000;i++){\n            list.add(i);\n        }\n        for(int i=0;i<list.size();i++){\n            System.out.println(list.get(i));\n        }\n    }\n\n    public static void testFunction2(){\n        String password = \"123456\";\n        if(password == \"123456\"){\n            System.out.println(\"Password matched\");\n        }\n    }\n\n    public static void testFunction3(){\n        int a = 5;\n        int b = 0;\n        System.out.println(a/b);\n    }\n\n    public static void testFunction4(){\n        Map map = new HashMap();\n        map.put(\"1\",\"Rahul\");\n        map.put(\"2\",\"Amit\");\n        System.out.println(map.get(\"3\"));\n    }\n\n    public static void testFunction5(){\n        String s = null;\n        System.out.println(s.length());\n    }\n\n    public static void main(String[] args){\n\n        addUser(\"Rahul\");\n        addUser(\"Amit\");\n        addUser(\"Test\");\n\n        printUsers();\n\n        login(\"admin\",\"123456\");\n\n        databaseQuery(\"1 OR 1=1\");\n\n        heavyProcess();\n\n        testFunction1();\n        testFunction2();\n        testFunction3();\n        testFunction4();\n        testFunction5();\n\n        System.out.println(users.get(10));\n    }\n}"
+    },
+    "60a307d1-641f-4148-be54-4e9aafe9e9cf": {
+      "id": "60a307d1-641f-4148-be54-4e9aafe9e9cf",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "processing",
+      "created_at": "2026-03-16T09:13:50.291Z"
+    },
+    "b5d4338e-f0a2-4167-b51e-33cf4ce4cc43": {
+      "id": "b5d4338e-f0a2-4167-b51e-33cf4ce4cc43",
+      "userId": null,
+      "language": "javascript",
+      "code_input": "console.log(\"hello\")",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-16T09:15:35.398Z",
+      "completed_at": "2026-03-16T09:15:38.452Z",
+      "scores": {
+        "bugs": 8,
+        "security": 10,
+        "performance": 9,
+        "readability": 5,
+        "best_practices": 6,
+        "composite": 7.6
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Lack of descriptive logging",
+          "description": "The console.log statement lacks a descriptive message.",
+          "suggestion": "Use a more descriptive message for logging.",
+          "standard_ref": "Write readable, self-documenting code with meaningful names."
+        },
+        {
+          "id": 2,
+          "dimension": "best_practices",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "No error handling",
+          "description": "The code does not handle potential errors.",
+          "suggestion": "Add try-catch blocks to handle potential errors.",
+          "standard_ref": "Always handle errors and edge cases (null checks, type checks)."
+        }
+      ],
+      "explanation": "The provided code simply logs 'hello' to the console. It lacks descriptive logging and does not handle potential errors. However, it does not contain any major security vulnerabilities or performance issues.",
+      "fixed_code": "try { console.log('Application started successfully'); } catch (error) { console.error('Error occurred:', error); }",
+      "original_code": "console.log(\"hello\")"
+    },
+    "c9b9e54b-bad2-4dba-ad49-4f6b7a437ea5": {
+      "id": "c9b9e54b-bad2-4dba-ad49-4f6b7a437ea5",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "processing",
+      "created_at": "2026-03-16T09:18:59.577Z"
+    },
+    "a4e282f6-55a6-488e-a164-5e6385f7147a": {
+      "id": "a4e282f6-55a6-488e-a164-5e6385f7147a",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-16T09:21:48.917Z",
+      "completed_at": "2026-03-16T09:21:54.089Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "SQL Injection Vulnerability",
+          "description": "The db_query function is vulnerable to SQL injection attacks because it directly concatenates user input into the SQL query.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "Hardcoded Credentials",
+          "description": "The login function uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure storage mechanism to store credentials.",
+          "standard_ref": "OWASP Top 10: A07:2021-Security Misconfiguration"
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by Zero Error",
+          "description": "The test_bug function will raise a ZeroDivisionError when attempting to divide by zero.",
+          "suggestion": "Add a check to ensure that the divisor is not zero before performing the division.",
+          "standard_ref": "PEP 8: Never use bare except clauses"
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 47,
+          "line_end": 47,
+          "title": "TypeError: len() of None",
+          "description": "The test_none function will raise a TypeError when attempting to get the length of None.",
+          "suggestion": "Add a check to ensure that the variable is not None before attempting to get its length.",
+          "standard_ref": "PEP 8: Always handle errors and edge cases"
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 29,
+          "line_end": 33,
+          "title": "Inefficient Loop",
+          "description": "The heavy_process function uses a nested loop that can be optimized for better performance.",
+          "suggestion": "Consider using a more efficient algorithm or data structure to reduce the number of iterations.",
+          "standard_ref": "PEP 8: Prefer list comprehensions and generators over explicit loops"
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Docstrings",
+          "description": "The functions and modules are missing docstrings, which can make it difficult for others to understand the code.",
+          "suggestion": "Add docstrings to provide a clear description of what each function and module does.",
+          "standard_ref": "PEP 8: Write docstrings for all public modules, functions, and classes"
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 37,
+          "line_end": 37,
+          "title": "File Handling",
+          "description": "The read_file function does not use a context manager to handle the file, which can lead to file descriptor leaks.",
+          "suggestion": "Use a context manager to ensure that the file is properly closed after use.",
+          "standard_ref": "PEP 8: Use context managers for file/resource handling"
+        },
+        {
+          "id": 8,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 41,
+          "line_end": 41,
+          "title": "Command Injection Vulnerability",
+          "description": "The delete_file function uses the os.system function to execute a command, which can be vulnerable to command injection attacks.",
+          "suggestion": "Use the os.remove function instead of os.system to delete files.",
+          "standard_ref": "OWASP Top 10: A03:2021-Injection"
+        }
+      ],
+      "explanation": "The provided code has several security vulnerabilities, including SQL injection and command injection. It also has bugs, such as division by zero and TypeError, and performance issues due to inefficient loops. Additionally, the code lacks docstrings and does not follow best practices for file handling and error handling.",
+      "fixed_code": "import sqlite3\nimport os\nfrom typing import List\n\nusers: List[str] = []\n\ndef add_user(name: str) -> None:\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index: int) -> str:\n    if index < len(users):\n        return users[index]\n    else:\n        raise IndexError(\"Index out of range\")\n\ndef login(username: str, password: str) -> None:\n    # Use environment variables or a secure storage mechanism to store credentials\n    if username == os.environ.get(\"ADMIN_USERNAME\") and password == os.environ.get(\"ADMIN_PASSWORD\"):\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id: int) -> None:\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n    query = \"SELECT * FROM users WHERE id = ?\"\n    cursor.execute(query, (user_id,))\n    rows = cursor.fetchall()\n    for r in rows:\n        print(r)\n    conn.close()\n\ndef heavy_process() -> None:\n    total = sum(i + j for i in range(10000) for j in range(10000))\n    print(total)\n\ndef read_file(filename: str) -> None:\n    with open(filename, \"r\") as f:\n        data = f.read()\n        print(data)\n\ndef delete_file(filename: str) -> None:\n    try:\n        os.remove(filename)\n    except FileNotFoundError:\n        print(\"File not found\")\n\ndef main() -> None:\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n    print(get_user(0))\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "f7df458e-ccda-49ea-bc0a-d05efd021743": {
+      "id": "f7df458e-ccda-49ea-bc0a-d05efd021743",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-16T09:45:06.929Z",
+      "completed_at": "2026-03-16T09:45:13.764Z",
+      "scores": {
+        "bugs": 2,
+        "security": 1,
+        "performance": 4,
+        "readability": 5,
+        "best_practices": 3,
+        "composite": 3
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Hardcoded Credentials",
+          "description": "The login function uses hardcoded credentials, which is a significant security risk.",
+          "suggestion": "Use environment variables or a secure storage mechanism for credentials.",
+          "standard_ref": "Universal Best Practices: Do not embed secrets, passwords, or API keys in source code."
+        },
+        {
+          "id": 2,
+          "dimension": "security",
+          "severity": "critical",
+          "line_start": 31,
+          "line_end": 31,
+          "title": "SQL Injection Vulnerability",
+          "description": "The db_query function is vulnerable to SQL injection attacks due to the concatenation of user input into the query string.",
+          "suggestion": "Use parameterized queries or prepared statements to prevent SQL injection.",
+          "standard_ref": "Universal Best Practices: Validate and sanitize all user input before use."
+        },
+        {
+          "id": 3,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Division by Zero Error",
+          "description": "The test_bug function will raise a ZeroDivisionError when attempting to divide by zero.",
+          "suggestion": "Add a check to prevent division by zero.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 4,
+          "dimension": "bugs",
+          "severity": "high",
+          "line_start": 47,
+          "line_end": 47,
+          "title": "TypeError: len() of None",
+          "description": "The test_none function will raise a TypeError when attempting to get the length of None.",
+          "suggestion": "Add a check to prevent attempting to get the length of None.",
+          "standard_ref": "Universal Best Practices: Always handle errors and edge cases (null checks, type checks)."
+        },
+        {
+          "id": 5,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 51,
+          "line_end": 55,
+          "title": "Inefficient Loop",
+          "description": "The heavy_process function uses an inefficient nested loop, which can cause performance issues.",
+          "suggestion": "Consider using a more efficient algorithm or data structure.",
+          "standard_ref": "Universal Best Practices: Prefer immutability where possible; avoid unnecessary mutation."
+        },
+        {
+          "id": 6,
+          "dimension": "readability",
+          "severity": "low",
+          "line_start": 1,
+          "line_end": 1,
+          "title": "Missing Docstrings",
+          "description": "The code is missing docstrings, which can make it harder to understand the purpose and behavior of functions.",
+          "suggestion": "Add docstrings to functions and modules.",
+          "standard_ref": "Python PEP 8 Standards: Write docstrings for all public modules, functions, and classes."
+        },
+        {
+          "id": 7,
+          "dimension": "best_practices",
+          "severity": "medium",
+          "line_start": 61,
+          "line_end": 61,
+          "title": "Bare Except Clause",
+          "description": "The code uses a bare except clause, which can catch and hide unexpected errors.",
+          "suggestion": "Catch specific exception types instead of using a bare except clause.",
+          "standard_ref": "Python PEP 8 Standards: Never use bare except clauses; catch specific exception types."
+        }
+      ],
+      "explanation": "The provided code has several issues, including hardcoded credentials, SQL injection vulnerabilities, division by zero errors, and inefficient loops. The code also lacks docstrings, uses bare except clauses, and does not follow best practices for handling errors and edge cases. To improve the code, it is recommended to address these issues and follow the provided suggestions.",
+      "fixed_code": "import sqlite3\nimport os\nimport logging\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a function to add a user\ndef add_user(name: str) -> None:\n    # Use a list to store users\n    users = []\n    users.append(name)\n    logger.info(\"User added: %s\", name)\n\n# Define a function to get a user\ndef get_user(index: int) -> str:\n    # Use a list to store users\n    users = []\n    try:\n        return users[index]\n    except IndexError:\n        logger.error(\"Index out of range\")\n        return None\n\n# Define a function to handle login\ndef login(username: str, password: str) -> bool:\n    # Use environment variables or a secure storage mechanism for credentials\n    admin_username = os.environ.get(\"ADMIN_USERNAME\")\n    admin_password = os.environ.get(\"ADMIN_PASSWORD\")\n    if username == admin_username and password == admin_password:\n        logger.info(\"Login successful\")\n        return True\n    else:\n        logger.info(\"Login failed\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    # Use a parameterized query to prevent SQL injection\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n    query = \"SELECT * FROM users WHERE id = ?\"\n    cursor.execute(query, (user_id,))\n    rows = cursor.fetchall()\n    for row in rows:\n        logger.info(row)\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    # Use a more efficient algorithm or data structure\n    total = 0\n    for i in range(10000):\n        total += i\n    logger.info(\"Heavy process completed\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with open(filename, \"r\") as file:\n            data = file.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        os.remove(filename)\n        logger.info(\"File deleted\")\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n\n# Define a main function\ndef main() -> None:\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n    get_user(0)\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
     }
   },
   "users": {
@@ -1717,6 +1996,12 @@
       "name": "deepak",
       "email": "nitishkumarji5991@gmail.com",
       "password": "Nitish@1234"
+    },
+    "alextest@codesensei.ai": {
+      "id": "c88f2d59-9cd6-4edd-9b3b-ef0c122a3af0",
+      "name": "Alex Test",
+      "email": "alextest@codesensei.ai",
+      "password": "password123"
     }
   },
   "userSettings": {
