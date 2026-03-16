@@ -1976,6 +1976,85 @@
       "explanation": "The provided code has several issues, including hardcoded credentials, SQL injection vulnerabilities, division by zero errors, and inefficient loops. The code also lacks docstrings, uses bare except clauses, and does not follow best practices for handling errors and edge cases. To improve the code, it is recommended to address these issues and follow the provided suggestions.",
       "fixed_code": "import sqlite3\nimport os\nimport logging\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a function to add a user\ndef add_user(name: str) -> None:\n    # Use a list to store users\n    users = []\n    users.append(name)\n    logger.info(\"User added: %s\", name)\n\n# Define a function to get a user\ndef get_user(index: int) -> str:\n    # Use a list to store users\n    users = []\n    try:\n        return users[index]\n    except IndexError:\n        logger.error(\"Index out of range\")\n        return None\n\n# Define a function to handle login\ndef login(username: str, password: str) -> bool:\n    # Use environment variables or a secure storage mechanism for credentials\n    admin_username = os.environ.get(\"ADMIN_USERNAME\")\n    admin_password = os.environ.get(\"ADMIN_PASSWORD\")\n    if username == admin_username and password == admin_password:\n        logger.info(\"Login successful\")\n        return True\n    else:\n        logger.info(\"Login failed\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    # Use a parameterized query to prevent SQL injection\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n    query = \"SELECT * FROM users WHERE id = ?\"\n    cursor.execute(query, (user_id,))\n    rows = cursor.fetchall()\n    for row in rows:\n        logger.info(row)\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    # Use a more efficient algorithm or data structure\n    total = 0\n    for i in range(10000):\n        total += i\n    logger.info(\"Heavy process completed\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with open(filename, \"r\") as file:\n            data = file.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        os.remove(filename)\n        logger.info(\"File deleted\")\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n\n# Define a main function\ndef main() -> None:\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n    get_user(0)\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
       "original_code": "import sqlite3\nimport os\n\nusers = []\n\ndef add_user(name):\n    users.append(name)\n    print(\"user added\")\n\ndef get_user(index):\n    return users[index]\n\ndef login(username, password):\n\n    if username == \"admin\" and password == \"123456\":\n        print(\"login success\")\n    else:\n        print(\"login failed\")\n\ndef db_query(user_id):\n\n    conn = sqlite3.connect(\"test.db\")\n    cursor = conn.cursor()\n\n    query = \"SELECT * FROM users WHERE id = \" + user_id\n\n    cursor.execute(query)\n\n    rows = cursor.fetchall()\n\n    for r in rows:\n        print(r)\n\ndef heavy_process():\n\n    total = 0\n\n    for i in range(10000):\n        for j in range(10000):\n            total += i + j\n\n    print(total)\n\ndef read_file():\n\n    f = open(\"data.txt\",\"r\")\n    data = f.read()\n    print(data)\n\ndef delete_file(filename):\n\n    os.system(\"rm \" + filename)\n\ndef test_bug():\n\n    a = 10\n    b = 0\n    print(a/b)\n\ndef test_none():\n\n    x = None\n    print(len(x))\n\ndef main():\n\n    add_user(\"Rahul\")\n    add_user(\"Amit\")\n\n    print(get_user(5))\n\n    login(\"admin\",\"123456\")\n\n    db_query(\"1 OR 1=1\")\n\n    heavy_process()\n\n    read_file()\n\n    delete_file(\"test.txt\")\n\n    test_bug()\n\n    test_none()\n\nif __name__ == \"__main__\":\n    main()"
+    },
+    "3f6f295f-08d5-48b2-a577-118964188fd3": {
+      "id": "3f6f295f-08d5-48b2-a577-118964188fd3",
+      "userId": "d397dfe6-fd53-485f-b4fd-24b34dc5a554",
+      "language": "python",
+      "code_input": "import sqlite3\nimport os\nimport logging\nfrom typing import List\nimport bcrypt\nimport pathlib\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a class to store users\nclass Users:\n    def __init__(self):\n        self.users = []\n\n    def add_user(self, name: str) -> None:\n        self.users.append(name)\n        logger.info(\"User added: %s\", name)\n\n    def get_user(self, index: int) -> str:\n        try:\n            return self.users[index]\n        except IndexError:\n            logger.error(\"Index out of range\")\n            return None\n\n# Define a function to handle login\ndef login(username: str, password: str) -> bool:\n    # Use a secure password hashing library like bcrypt\n    admin_username = os.environ.get(\"ADMIN_USERNAME\")\n    admin_password_hash = os.environ.get(\"ADMIN_PASSWORD_HASH\")\n    if username == admin_username and bcrypt.checkpw(password.encode(\"utf-8\"), admin_password_hash.encode(\"utf-8\")):\n        logger.info(\"Login successful\")\n        return True\n    else:\n        logger.info(\"Login failed\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    # Use a library like SQLAlchemy to handle database interactions\n    from sqlalchemy import create_engine\n    engine = create_engine(\"sqlite:///test.db\")\n    with engine.connect() as connection:\n        query = \"SELECT * FROM users WHERE id = :user_id\"\n        result = connection.execute(query, {\"user_id\": user_id})\n        for row in result:\n            logger.info(row)\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    # Use a more efficient algorithm\n    total = sum(range(10000))\n    logger.info(\"Heavy process completed\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with pathlib.Path(filename).open(\"r\") as file:\n            data = file.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        if pathlib.Path(filename).exists():\n            pathlib.Path(filename).unlink()\n            logger.info(\"File deleted\")\n        else:\n            logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a main function\ndef main() -> None:\n    users = Users()\n    users.add_user(\"Rahul\")\n    users.add_user(\"Amit\")\n    users.get_user(0)\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "source_type": "pasted",
+      "source_display": "Manual Paste",
+      "status": "completed",
+      "created_at": "2026-03-16T10:54:42.705Z",
+      "completed_at": "2026-03-16T10:54:47.747Z",
+      "scores": {
+        "bugs": 6,
+        "security": 5,
+        "performance": 7,
+        "readability": 8,
+        "best_practices": 6,
+        "composite": 6.4
+      },
+      "findings": [
+        {
+          "id": 1,
+          "dimension": "security",
+          "severity": "high",
+          "line_start": 23,
+          "line_end": 23,
+          "title": "Insecure Password Storage",
+          "description": "The code stores the admin password hash in an environment variable, which may not be secure. Consider using a secrets manager or a secure storage mechanism.",
+          "suggestion": "Use a secrets manager or a secure storage mechanism to store sensitive data.",
+          "standard_ref": "OWASP Top 10: A07 - Insecure Storage of Sensitive Data"
+        },
+        {
+          "id": 2,
+          "dimension": "performance",
+          "severity": "medium",
+          "line_start": 43,
+          "line_end": 43,
+          "title": "Inefficient Algorithm",
+          "description": "The code uses a simple sum function to calculate the total, which may not be efficient for large ranges. Consider using a more efficient algorithm.",
+          "suggestion": "Use a more efficient algorithm, such as the formula for the sum of an arithmetic series.",
+          "standard_ref": "PEP 8: Prefer efficient algorithms"
+        },
+        {
+          "id": 3,
+          "dimension": "best_practices",
+          "severity": "low",
+          "line_start": 51,
+          "line_end": 51,
+          "title": "File Handling",
+          "description": "The code does not handle file handling errors properly. Consider using a try-except block to handle potential errors.",
+          "suggestion": "Use a try-except block to handle potential errors when handling files.",
+          "standard_ref": "PEP 8: Use try-except blocks to handle errors"
+        },
+        {
+          "id": 4,
+          "dimension": "security",
+          "severity": "medium",
+          "line_start": 29,
+          "line_end": 29,
+          "title": "Insecure Login Mechanism",
+          "description": "The code uses a simple string comparison to verify the username and password. Consider using a more secure login mechanism.",
+          "suggestion": "Use a more secure login mechanism, such as a challenge-response authentication protocol.",
+          "standard_ref": "OWASP Top 10: A02 - Broken Authentication"
+        },
+        {
+          "id": 5,
+          "dimension": "bugs",
+          "severity": "low",
+          "line_start": 17,
+          "line_end": 17,
+          "title": "Index Error",
+          "description": "The code does not handle index errors properly. Consider using a try-except block to handle potential errors.",
+          "suggestion": "Use a try-except block to handle potential errors when accessing list indices.",
+          "standard_ref": "PEP 8: Use try-except blocks to handle errors"
+        }
+      ],
+      "explanation": "The code is a simple Python program that demonstrates various concepts, including user management, login mechanisms, database queries, and file handling. However, the code has several issues, including insecure password storage, inefficient algorithms, and inadequate error handling. To improve the code, consider using a secrets manager to store sensitive data, optimizing algorithms for performance, and implementing robust error handling mechanisms.",
+      "fixed_code": "import sqlite3\nimport os\nimport logging\nfrom typing import List\nimport bcrypt\nimport pathlib\nfrom sqlalchemy import create_engine\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a class to store users\nclass Users:\n    def __init__(self):\n        self.users = []\n\n    def add_user(self, name: str) -> None:\n        self.users.append(name)\n        logger.info(\"User added: %s\", name)\n\n    def get_user(self, index: int) -> str:\n        try:\n            return self.users[index]\n        except IndexError:\n            logger.error(\"Index out of range\")\n            return None\n\n# Define a function to handle login\ndef login(username: str, password: str) -> bool:\n    # Use a secure password hashing library like bcrypt\n    admin_username = os.environ.get(\"ADMIN_USERNAME\")\n    admin_password_hash = os.environ.get(\"ADMIN_PASSWORD_HASH\")\n    if username == admin_username and bcrypt.checkpw(password.encode(\"utf-8\"), admin_password_hash.encode(\"utf-8\")):\n        logger.info(\"Login successful\")\n        return True\n    else:\n        logger.info(\"Login failed\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    # Use a library like SQLAlchemy to handle database interactions\n    engine = create_engine(\"sqlite:///test.db\")\n    with engine.connect() as connection:\n        query = \"SELECT * FROM users WHERE id = :user_id\"\n        result = connection.execute(query, {\"user_id\": user_id})\n        for row in result:\n            logger.info(row)\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    # Use a more efficient algorithm\n    total = sum(range(10000))\n    logger.info(\"Heavy process completed\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with pathlib.Path(filename).open(\"r\") as file:\n            data = file.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        if pathlib.Path(filename).exists():\n            pathlib.Path(filename).unlink()\n            logger.info(\"File deleted\")\n        else:\n            logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a main function\ndef main() -> None:\n    users = Users()\n    users.add_user(\"Rahul\")\n    users.add_user(\"Amit\")\n    users.get_user(0)\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()",
+      "original_code": "import sqlite3\nimport os\nimport logging\nfrom typing import List\nimport bcrypt\nimport pathlib\n\n# Define a logger\nlogger = logging.getLogger(__name__)\n\n# Define a class to store users\nclass Users:\n    def __init__(self):\n        self.users = []\n\n    def add_user(self, name: str) -> None:\n        self.users.append(name)\n        logger.info(\"User added: %s\", name)\n\n    def get_user(self, index: int) -> str:\n        try:\n            return self.users[index]\n        except IndexError:\n            logger.error(\"Index out of range\")\n            return None\n\n# Define a function to handle login\ndef login(username: str, password: str) -> bool:\n    # Use a secure password hashing library like bcrypt\n    admin_username = os.environ.get(\"ADMIN_USERNAME\")\n    admin_password_hash = os.environ.get(\"ADMIN_PASSWORD_HASH\")\n    if username == admin_username and bcrypt.checkpw(password.encode(\"utf-8\"), admin_password_hash.encode(\"utf-8\")):\n        logger.info(\"Login successful\")\n        return True\n    else:\n        logger.info(\"Login failed\")\n        return False\n\n# Define a function to query the database\ndef db_query(user_id: int) -> None:\n    # Use a library like SQLAlchemy to handle database interactions\n    from sqlalchemy import create_engine\n    engine = create_engine(\"sqlite:///test.db\")\n    with engine.connect() as connection:\n        query = \"SELECT * FROM users WHERE id = :user_id\"\n        result = connection.execute(query, {\"user_id\": user_id})\n        for row in result:\n            logger.info(row)\n\n# Define a function to perform a heavy process\ndef heavy_process() -> None:\n    # Use a more efficient algorithm\n    total = sum(range(10000))\n    logger.info(\"Heavy process completed\")\n\n# Define a function to read a file\ndef read_file(filename: str) -> None:\n    try:\n        with pathlib.Path(filename).open(\"r\") as file:\n            data = file.read()\n            logger.info(data)\n    except FileNotFoundError:\n        logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a function to delete a file\ndef delete_file(filename: str) -> None:\n    try:\n        if pathlib.Path(filename).exists():\n            pathlib.Path(filename).unlink()\n            logger.info(\"File deleted\")\n        else:\n            logger.error(\"File not found\")\n    except PermissionError:\n        logger.error(\"Permission denied\")\n\n# Define a main function\ndef main() -> None:\n    users = Users()\n    users.add_user(\"Rahul\")\n    users.add_user(\"Amit\")\n    users.get_user(0)\n    login(\"admin\", \"123456\")\n    db_query(1)\n    heavy_process()\n    read_file(\"data.txt\")\n    delete_file(\"test.txt\")\n\nif __name__ == \"__main__\":\n    main()"
     }
   },
   "users": {
