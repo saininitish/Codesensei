@@ -91,7 +91,7 @@ function ProfileModal({ user, onClose, onLogout }) {
   return (
     <AnimatePresence>
       <motion.div 
-        className="fixed inset-0 z-50 flex items-center justify-center bg-dark-bg/80 backdrop-blur-md p-4" 
+        className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-dark-bg/80 backdrop-blur-md" 
         onClick={onClose}
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       >
@@ -103,11 +103,11 @@ function ProfileModal({ user, onClose, onLogout }) {
           exit={{ scale: 0.95, y: 20, opacity: 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 25 }}
         >
-          <div className="flex items-center justify-between px-6 py-4 border-b border-dark-border/50 sticky top-0 bg-dark-card/90 backdrop-blur-sm z-20">
-            <div className="flex items-center gap-2 text-white font-display text-lg font-semibold tracking-wide">
+          <div className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 border-b border-dark-border/50 bg-dark-card/90 backdrop-blur-sm">
+            <div className="flex items-center gap-2 text-lg font-semibold tracking-wide text-white font-display">
               <UserCircle className="w-5 h-5 text-primary-400" /> Account Settings
             </div>
-            <button onClick={onClose} className="text-dark-muted hover:text-white transition-colors">
+            <button onClick={onClose} className="transition-colors text-dark-muted hover:text-white">
               <X className="w-5 h-5" />
             </button>
           </div>
@@ -127,52 +127,52 @@ function ProfileModal({ user, onClose, onLogout }) {
           )}
 
           {loading ? (
-            <div className="py-12 text-center text-dark-muted text-sm animate-pulse font-medium">Loading settings...</div>
+            <div className="py-12 text-sm font-medium text-center text-dark-muted animate-pulse">Loading settings...</div>
           ) : (
             <div className="px-6 py-6 space-y-8">
               {/* Profile Section */}
               <section className="space-y-4">
                 <div className="flex flex-col items-center gap-3 pb-2">
                   <Avatar name={name} size="lg" />
-                  <p className="text-xs text-dark-muted uppercase tracking-widest font-bold">Public Profile</p>
+                  <p className="text-xs font-bold tracking-widest uppercase text-dark-muted">Public Profile</p>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <label className="block text-[10px] font-bold text-dark-muted mb-1.5 uppercase tracking-wide">Display Name</label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-muted" />
+                      <User className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-dark-muted" />
                       <input type="text" value={name} onChange={e => setName(e.target.value)}
-                        className="input-field pl-10 h-11" />
+                        className="pl-10 input-field h-11" />
                     </div>
                   </div>
                   <div>
                     <label className="block text-[10px] font-bold text-dark-muted mb-1.5 uppercase tracking-wide">Email Address</label>
                     <div className="relative">
-                      <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-muted" />
+                      <Mail className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-dark-muted" />
                       <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-                        className="input-field pl-10 h-11" />
+                        className="pl-10 input-field h-11" />
                     </div>
                   </div>
                 </div>
               </section>
 
               {/* Security Section */}
-              <section className="space-y-4 pt-2">
-                <h3 className="text-xs font-bold text-dark-muted uppercase tracking-widest border-l-2 border-primary-500 pl-2">Security</h3>
+              <section className="pt-2 space-y-4">
+                <h3 className="pl-2 text-xs font-bold tracking-widest uppercase border-l-2 text-dark-muted border-primary-500">Security</h3>
                 <div>
                   <label className="block text-[10px] font-bold mb-1.5 uppercase tracking-widest text-primary-400/80">New Password</label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-dark-muted" />
+                    <Lock className="absolute w-4 h-4 -translate-y-1/2 left-3 top-1/2 text-dark-muted" />
                     <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Leave blank to keep current"
-                      className="input-field pl-10 h-11" />
+                      className="pl-10 input-field h-11" />
                   </div>
                 </div>
               </section>
 
               {/* Notifications Section */}
-              <section className="space-y-3 pt-2">
-                <h3 className="text-xs font-bold text-dark-muted uppercase tracking-widest border-l-2 border-primary-500 pl-2">Notifications</h3>
+              <section className="pt-2 space-y-3">
+                <h3 className="pl-2 text-xs font-bold tracking-widest uppercase border-l-2 text-dark-muted border-primary-500">Notifications</h3>
                 <div className="space-y-3">
                   {[{ key: 'emailOnComplete', label: 'Email when review completes' }, { key: 'weeklyDigest', label: 'Weekly progress digest' }].map(({ key, label }) => (
                     <label key={key} className="flex items-center gap-3 cursor-pointer group">
@@ -180,7 +180,7 @@ function ProfileModal({ user, onClose, onLogout }) {
                         className={`relative w-10 h-5 rounded-full transition-colors cursor-pointer ${notifications[key] ? 'bg-primary-500 shadow-[0_0_10px_rgba(59,130,246,0.3)]' : 'bg-dark-border'}`}>
                         <span className={`absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${notifications[key] ? 'translate-x-5' : ''}`} />
                       </div>
-                      <span className="text-xs text-slate-300 group-hover:text-white transition-colors">{label}</span>
+                      <span className="text-xs transition-colors text-slate-300 group-hover:text-white">{label}</span>
                     </label>
                   ))}
                 </div>
@@ -188,14 +188,14 @@ function ProfileModal({ user, onClose, onLogout }) {
 
               {/* Danger Zone */}
               <section className="pt-6 border-t border-dark-border/50">
-                <div className="bg-red-500/5 border border-red-500/20 rounded-2xl p-4">
-                  <div className="flex items-center gap-2 text-red-400 text-xs font-bold uppercase tracking-widest mb-1">
+                <div className="p-4 border bg-red-500/5 border-red-500/20 rounded-2xl">
+                  <div className="flex items-center gap-2 mb-1 text-xs font-bold tracking-widest text-red-400 uppercase">
                     <AlertTriangle className="w-4 h-4" /> Danger Zone
                   </div>
                   <p className="text-[11px] text-dark-muted mb-4">Deleting your account is permanent and will remove all your reviews and settings data. There is no undo.</p>
                   
                   {confirmDelete ? (
-                    <div className="flex items-center gap-3 animate-in fade-in slide-in-from-top-1 duration-200">
+                    <div className="flex items-center gap-3 duration-200 animate-in fade-in slide-in-from-top-1">
                       <button onClick={handleDeleteAccount} className="flex-1 py-2.5 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl shadow-lg shadow-red-600/30 transition-all hover:-translate-y-0.5">
                         Yes, Delete Everything
                       </button>
@@ -213,9 +213,9 @@ function ProfileModal({ user, onClose, onLogout }) {
             </div>
           )}
 
-          <div className="px-6 pb-6 pt-2 flex items-center gap-3">
+          <div className="flex items-center gap-3 px-6 pt-2 pb-6">
             <button onClick={handleSave} disabled={saving || loading}
-              className="btn-primary flex-1 flex items-center justify-center gap-2">
+              className="flex items-center justify-center flex-1 gap-2 btn-primary">
               {saving ? 'Saving...' : <><Save className="w-4 h-4" /> Save Changes</>}
             </button>
             <button onClick={onClose} className="px-6 py-2.5 text-dark-muted hover:text-white rounded-xl border border-dark-border text-sm transition-colors hover:bg-dark-border/30">Close</button>
@@ -246,20 +246,20 @@ const Sidebar = ({ currentView, setCurrentView, onLogout, currentUser }) => {
 
   return (
     <>
-      <div className="w-64 bg-dark-bg/95 backdrop-blur-md border-r border-dark-border/40 flex flex-col h-screen shrink-0 z-40 relative">
+      <div className="relative z-40 flex flex-col w-64 h-screen border-r bg-dark-bg/95 backdrop-blur-md border-dark-border/40 shrink-0">
         {/* Logo */}
-        <div className="p-6 flex items-center gap-3 mt-2">
+        <div className="flex items-center gap-3 p-6 mt-2">
           <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-primary-500/20 to-primary-600/10 border border-primary-500/30 flex items-center justify-center text-primary-400 shadow-[0_0_15px_rgba(59,130,246,0.15)] relative overflow-hidden group">
-            <div className="absolute inset-0 bg-primary-400/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-            <Code className="w-5 h-5 relative z-10" />
+            <div className="absolute inset-0 transition-transform duration-300 translate-y-full bg-primary-400/20 group-hover:translate-y-0"></div>
+            <Code className="relative z-10 w-5 h-5" />
           </div>
-          <span className="text-2xl font-display font-bold bg-gradient-to-r from-white via-slate-200 to-primary-200 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold text-transparent font-display bg-gradient-to-r from-white via-slate-200 to-primary-200 bg-clip-text">
             CodeSensei
           </span>
         </div>
 
         {/* Nav */}
-        <nav className="flex-1 px-4 space-y-2 mt-2">
+        <nav className="flex-1 px-4 mt-2 space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentView === item.id || (currentView === 'result' && item.id === 'submit');
@@ -281,7 +281,7 @@ const Sidebar = ({ currentView, setCurrentView, onLogout, currentUser }) => {
         </nav>
 
         {/* Bottom user section with dropdown */}
-        <div className="p-4 border-t border-dark-border/40 relative" ref={dropRef}>
+        <div className="relative p-4 border-t border-dark-border/40" ref={dropRef}>
           <AnimatePresence>
             {dropOpen && (
               <motion.div 
@@ -289,11 +289,11 @@ const Sidebar = ({ currentView, setCurrentView, onLogout, currentUser }) => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ duration: 0.2 }}
-                className="absolute bottom-full left-3 right-3 mb-2 bg-dark-card border border-dark-border shadow-2xl shadow-black/50 rounded-xl z-50 overflow-hidden"
+                className="absolute z-50 mb-2 overflow-hidden border shadow-2xl bottom-full left-3 right-3 bg-dark-card border-dark-border shadow-black/50 rounded-xl"
               >
                 <button
                   onClick={() => { setDropOpen(false); setShowProfile(true); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-dark-border/50 transition-colors text-left"
+                  className="flex items-center w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-dark-border/50"
                 >
                   <UserCircle className="w-4 h-4 text-primary-400" />
                   <span className="text-sm font-medium text-slate-200">Account Settings</span>
@@ -301,7 +301,7 @@ const Sidebar = ({ currentView, setCurrentView, onLogout, currentUser }) => {
                 <div className="border-t border-dark-border/50" />
                 <button
                   onClick={() => { setDropOpen(false); onLogout(); }}
-                  className="w-full flex items-center gap-3 px-4 py-3 hover:bg-red-500/10 transition-colors text-left"
+                  className="flex items-center w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-red-500/10"
                 >
                   <LogOut className="w-4 h-4 text-red-500" />
                   <span className="text-sm font-medium text-red-400">Logout</span>
@@ -315,8 +315,8 @@ const Sidebar = ({ currentView, setCurrentView, onLogout, currentUser }) => {
             className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 hover:bg-dark-card/60 active:scale-[0.98] border ${dropOpen ? 'border-dark-border/80 bg-dark-card/40' : 'border-transparent'}`}
           >
             <Avatar name={currentUser?.name} />
-            <div className="text-sm flex-1 min-w-0 text-left">
-              <div className="font-semibold text-slate-200 truncate">{currentUser?.name || 'Dev User'}</div>
+            <div className="flex-1 min-w-0 text-sm text-left">
+              <div className="font-semibold truncate text-slate-200">{currentUser?.name || 'Dev User'}</div>
               <div className="text-dark-muted text-[11px] truncate">{currentUser?.email || ''}</div>
             </div>
             <ChevronUp className={`w-4 h-4 text-dark-muted transition-transform duration-300 ${dropOpen ? '' : 'rotate-180'}`} />
